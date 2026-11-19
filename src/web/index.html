@@ -1,0 +1,1453 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>中医健康顾问 · 四诊合参</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'Kaiti SC','STKaiti','KaiTi','楷体','PingFang SC','Microsoft YaHei',serif;
+    background:radial-gradient(ellipse at 50% 0%,#1a2332 0%,#111927 45%,#0b111c 100%);
+    color:#ffffff;min-height:100vh;background-attachment:fixed}
+  .container{max-width:880px;margin:0 auto;padding:24px 16px 40px}
+  h1{text-align:center;font-size:32px;padding:36px 0 4px;color:#d4a853;font-weight:400;
+    letter-spacing:10px;text-shadow:0 0 24px rgba(212,168,83,.25)}
+  .subtitle{text-align:center;color:#b0c8d8;font-size:13px;letter-spacing:4px;margin-bottom:6px}
+  .inkline{width:180px;height:3px;margin:14px auto 24px;
+    background:linear-gradient(90deg,transparent,#d4a853 30%,#d4a853 70%,transparent);border-radius:2px;position:relative}
+  .inkline::after{content:"";position:absolute;left:50%;top:-4px;width:10px;height:10px;
+    transform:translateX(-50%) rotate(45deg);border:1px solid rgba(212,168,83,.6);background:rgba(212,168,83,.15)}
+  .card{background:#1a2332;border:1px solid rgba(212,168,83,.18);border-radius:14px;
+    padding:22px 24px;margin-bottom:20px;box-shadow:0 6px 24px rgba(0,0,0,.35)}
+  .section-title{color:#d4a853;font-size:18px;font-weight:600;border-left:3px solid #d4a853;
+    padding-left:12px;margin-bottom:14px;letter-spacing:2px}
+  .section-title small{font-size:12px;color:#7c9bc0;font-weight:400;margin-left:10px;letter-spacing:0}
+  .hint{color:#b0c8d8;font-size:13px;margin-bottom:10px;line-height:1.7}
+  textarea{width:100%;min-height:96px;background:#121a28;border:1px solid #2c3a4f;border-radius:8px;
+    padding:12px 14px;font-size:15px;color:#ffffff;font-family:inherit;resize:vertical;outline:none;transition:border .2s}
+  textarea:focus{border-color:#d4a853}
+  input[type=text]{width:100%;background:#121a28;border:1px solid #2c3a4f;border-radius:8px;
+    padding:10px 14px;font-size:14px;color:#ffffff;font-family:inherit;outline:none;margin-top:8px}
+  input[type=text]:focus{border-color:#d4a853}
+  select{background:#121a28;border:1px solid #2c3a4f;border-radius:8px;color:#ffffff;
+    font-family:inherit;font-size:14px;padding:6px;outline:none}
+  .btn{display:inline-block;background:linear-gradient(135deg,#d4a853,#b8913f);color:#141b26;
+    border:none;border-radius:8px;padding:11px 28px;font-size:15px;font-weight:600;cursor:pointer;
+    transition:filter .2s,transform .1s;font-family:inherit;letter-spacing:2px;margin-top:12px}
+  .btn:hover{filter:brightness(1.1)}
+  .btn:active{transform:translateY(1px)}
+  .btn:disabled{opacity:.45;cursor:not-allowed}
+  .btn.ghost{background:transparent;border:1px solid rgba(212,168,83,.55);color:#d4a853;font-weight:400}
+  .btn.ghost:hover{background:rgba(212,168,83,.12)}
+  .btn.danger{background:linear-gradient(135deg,#e06c5b,#c2503f)}
+  .btn.big{width:100%;padding:15px;font-size:17px;letter-spacing:8px;margin-top:16px}
+  .examples{display:flex;flex-wrap:wrap;gap:8px;margin:4px 0 12px}
+  .example-tag{background:rgba(212,168,83,.08);border:1px solid rgba(212,168,83,.35);border-radius:16px;
+    padding:6px 14px;font-size:13px;cursor:pointer;color:#e8d9b0;transition:all .2s}
+  .example-tag:hover{background:rgba(212,168,83,.22);border-color:#d4a853}
+  .sub-card{background:#182131;border:1px solid rgba(124,156,192,.2);border-radius:10px;
+    padding:14px 16px;margin:12px 0}
+  .sub-card h4{color:#e8d9b0;font-size:14px;font-weight:600;margin-bottom:10px;letter-spacing:1px}
+  .upload-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+  .file-label{display:inline-block;background:rgba(124,156,192,.12);border:1px dashed #7c9bc0;
+    color:#b0c8d8;border-radius:8px;padding:10px 18px;font-size:14px;cursor:pointer;transition:all .2s}
+  .file-label input{display:none}
+  .preview-box{margin-top:10px;display:none;text-align:center}
+  .preview-box img{max-width:200px;max-height:150px;border-radius:8px;
+    border:1px solid rgba(212,168,83,.4);box-shadow:0 4px 16px rgba(0,0,0,.4)}
+  .file-meta{color:#7c9bc0;font-size:12px;margin-top:6px}
+  .pulse-chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px}
+  .pulse-chip{background:rgba(124,156,192,.08);border:1px solid #3a4a63;color:#d0e0f0;
+    border-radius:20px;padding:7px 16px;font-size:14px;cursor:pointer;transition:all .2s;user-select:none}
+  .pulse-chip:hover{border-color:#d4a853;color:#e8d9b0}
+  .pulse-chip.active{background:#d4a853;border-color:#d4a853;color:#141b26;font-weight:600}
+  .loading{text-align:center;color:#d4a853;padding:14px;display:none;font-size:14px;letter-spacing:2px}
+  .spinner{display:inline-block;width:18px;height:18px;border:2px solid rgba(212,168,83,.3);
+    border-top-color:#d4a853;border-radius:50%;animation:spin .8s linear infinite;
+    vertical-align:-4px;margin-right:8px}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .error{color:#ff6b6b;font-size:13px;margin:8px 0;display:none;line-height:1.6}
+  .result{white-space:pre-wrap;line-height:1.9;font-size:15px;color:#ffffff}
+  .result b{color:#d4a853}
+  .tag-row{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0}
+  .tag{background:rgba(212,168,83,.12);border:1px solid rgba(212,168,83,.45);color:#e8d9b0;
+    border-radius:16px;padding:4px 13px;font-size:13px}
+  .diag-table{width:100%;font-size:14px;border-collapse:collapse;margin:10px 0}
+  .diag-table td{padding:8px 10px;border-bottom:1px solid #24324a;vertical-align:top;color:#ffffff}
+  .diag-table td:first-child{width:110px;color:#d4a853;font-weight:500;white-space:nowrap}
+  .note{color:#7c9bc0;font-size:12px;margin-top:10px;line-height:1.7}
+  .rec-tip{color:#ff6b6b;font-size:13px;margin-top:6px}
+  .recording-dot{display:inline-block;width:10px;height:10px;border-radius:50%;background:#ff6b6b;
+    margin-right:6px;animation:pulse 1s infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.25}}
+  .footer{text-align:center;color:#4a5a6a;font-size:12px;padding:24px 0 8px;letter-spacing:1px}
+  .divider{border:none;border-top:1px solid rgba(212,168,83,.15);margin:18px 0}
+  /* ── 功能 Tab 导航 ── */
+  .tabs{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:20px}
+  .tab-btn{background:rgba(212,168,83,.06);border:1px solid rgba(212,168,83,.35);color:#e8d9b0;
+    border-radius:22px;padding:9px 18px;font-size:14px;cursor:pointer;font-family:inherit;
+    letter-spacing:2px;transition:all .2s;white-space:nowrap}
+  .tab-btn:hover{border-color:#d4a853;color:#fff}
+  .tab-btn.active{background:linear-gradient(135deg,#d4a853,#b8913f);border-color:#d4a853;color:#141b26;font-weight:600}
+  .tab-icon{margin-right:4px;color:#d4a853}
+  .tab-btn.active .tab-icon{color:#141b26}
+  .tab-panel{display:none}
+  .tab-panel.active{display:block;animation:fadeIn .28s ease}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  /* ── 辨证方式卡片（AI辨证 tab 内） ── */
+  .mode-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin-bottom:14px}
+  .mode-card{background:#182131;border:1px solid rgba(124,156,192,.25);border-radius:12px;
+    padding:14px 12px;text-align:center;cursor:pointer;transition:all .2s;user-select:none}
+  .mode-card:hover{border-color:#d4a853;transform:translateY(-2px)}
+  .mode-card .m-icon{font-size:24px;display:block;margin-bottom:6px}
+  .mode-card .m-name{color:#e8d9b0;font-size:14px;font-weight:600;letter-spacing:1px}
+  .mode-card .m-desc{color:#7c9bc0;font-size:11px;margin-top:4px;line-height:1.5}
+  .mode-card.active{background:linear-gradient(135deg,rgba(212,168,83,.22),rgba(184,145,63,.14));
+    border-color:#d4a853;box-shadow:0 0 0 1px #d4a853 inset}
+  .mode-card.active .m-name{color:#d4a853}
+  .mode-panel{display:none}
+  .mode-panel.active{display:block;animation:fadeIn .25s ease}
+  /* ── 体质 chips ── */
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 12px}
+  .chip{background:rgba(124,156,192,.08);border:1px solid #3a4a63;color:#d0e0f0;border-radius:18px;
+    padding:6px 14px;font-size:13px;cursor:pointer;transition:all .2s;user-select:none}
+  .chip:hover{border-color:#d4a853;color:#e8d9b0}
+  .chip.on{background:#d4a853;border-color:#d4a853;color:#141b26;font-weight:600}
+  /* ── 化验上传 ── */
+  .upload-box{border:2px dashed #3a4a63;border-radius:10px;padding:20px 14px;text-align:center;
+    color:#7c9bc0;font-size:14px;cursor:pointer;transition:all .2s;background:rgba(124,156,192,.04)}
+  .upload-box:hover{border-color:#d4a853;color:#e8d9b0}
+  .upload-box input[type=file]{display:none}
+  .upload-box .u-icon{font-size:28px;display:block;margin-bottom:6px}
+  .lab-preview{display:none;margin-top:12px;text-align:center}
+  .lab-preview img{max-width:100%;max-height:260px;border:1px solid rgba(212,168,83,.4);border-radius:8px}
+  /* ── 通用结果渲染 ── */
+  .res-section{background:#182131;border:1px solid rgba(124,156,192,.2);border-left:4px solid #d4a853;
+    border-radius:8px;padding:12px 14px;margin-bottom:12px}
+  .res-section .rs-title{font-size:14px;font-weight:700;color:#d4a853;margin-bottom:6px}
+  .res-section .rs-title::before{content:"◆ ";font-size:10px;color:#d4a853}
+  .res-section .rs-body{font-size:14px;color:#ffffff;white-space:pre-wrap;word-break:break-word;line-height:1.8}
+  .res-section ul{padding-left:20px}
+  .res-section li{margin-bottom:4px}
+  .res-error{background:rgba(224,108,91,.08);border:1px solid rgba(224,108,91,.35);border-radius:8px;
+    padding:12px 14px;color:#ff8f80;font-size:14px;white-space:pre-wrap}
+  .res-raw{background:#121a28;border:1px dashed #3a4a63;border-radius:8px;padding:12px 14px;
+    font-size:13px;color:#b0c8d8;white-space:pre-wrap;word-break:break-word}
+  /* ── 辨证结果联动按钮 ── */
+  .link-btns{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px;padding-top:14px;
+    border-top:1px dashed rgba(212,168,83,.25)}
+  .link-btns .btn{margin-top:0}
+  .save-ok{color:#7fd08a;font-size:13px;margin-top:8px;line-height:1.6}
+  /* ── 健康档案 ── */
+  .pf-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+  .pf-row select{flex:1;min-width:200px;max-width:320px;padding:10px 14px;font-size:15px}
+  .pf-fields{display:flex;gap:14px;flex-wrap:wrap;margin:10px 0 6px}
+  .pf-fields label{flex:1;min-width:130px;font-size:13px;color:#b0c8d8}
+  .pf-fields label em{display:block;font-style:normal;margin-bottom:6px;letter-spacing:1px}
+  .pf-fields input,.pf-fields select{width:100%;margin-top:0}
+  .plan-box{background:#182131;border:1px solid rgba(124,156,192,.2);border-left:4px solid #d4a853;
+    border-radius:8px;padding:12px 14px;margin-bottom:12px}
+  .plan-box h4{color:#d4a853;font-size:14px;margin-bottom:8px;letter-spacing:1px}
+  .plan-box ul{padding-left:20px;color:#ffffff;font-size:14px;line-height:1.9}
+  .plan-box ul li{margin-bottom:3px}
+  .sched-table{width:100%;border-collapse:collapse;margin:4px 0}
+  .sched-table td{padding:7px 10px;border-bottom:1px solid #24324a;font-size:14px;color:#ffffff}
+  .sched-table td:first-child{color:#d4a853;width:70px;font-weight:500}
+  .sched-table tr:last-child td{border-bottom:none}
+  .hist-item{background:#121a28;border:1px solid #2c3a4f;border-radius:8px;padding:10px 12px;margin-bottom:10px;font-size:13px}
+  .hist-item .h-time{color:#7c9bc0;font-size:12px;letter-spacing:1px}
+  .hist-item .h-q{color:#e8d9b0;margin:6px 0 4px;line-height:1.7}
+  .hist-item .h-r{color:#b0c8d8;line-height:1.7;white-space:pre-wrap;word-break:break-word}
+  .hist-empty{color:#7c9bc0;font-size:13px;line-height:1.8}
+  @media(max-width:600px){h1{font-size:24px;letter-spacing:6px}.card{padding:16px}}
+</style></head>
+<body>
+<div class="container">
+<h1>☯ 中医健康顾问</h1>
+<p class="subtitle">望 · 闻 · 问 · 切 · 四诊合参</p>
+<div class="inkline"></div>
+
+<!-- ── 功能 Tab 导航（4 tab） ── -->
+<div class="tabs" id="tabs">
+  <button class="tab-btn active" data-tab="tab-consult"><span class="tab-icon">证</span>AI辨证</button>
+  <button class="tab-btn" data-tab="tab-plan"><span class="tab-icon">方</span>调理方案</button>
+  <button class="tab-btn" data-tab="tab-profile"><span class="tab-icon">档</span>健康档案</button>
+  <button class="tab-btn" data-tab="tab-query"><span class="tab-icon">典</span>古籍检索</button>
+</div>
+
+<!-- ═══ Tab AI辨证（融合 四诊合参 / 体质辨识 / 化验分析 / 文本辨证） ═══ -->
+<div class="tab-panel active" id="tab-consult">
+  <div class="card">
+    <div class="section-title">AI 辨证 <small>选择辨证方式 · 参合而定</small></div>
+    <p class="hint">请选择一种辨证方式：四诊合参（望闻问切）最全面，体质辨识 / 化验分析 / 文本辨证各有侧重。辨证结果可一键查看调理方案或存入健康档案。</p>
+
+    <div class="mode-cards" id="mode-cards">
+      <div class="mode-card active" data-mode="sizhen"><span class="m-icon">☯</span><span class="m-name">四诊合参</span><span class="m-desc">望闻问切 · 全面参合</span></div>
+      <div class="mode-card" data-mode="constitution"><span class="m-icon">🧬</span><span class="m-name">体质辨识</span><span class="m-desc">九种体质 · 调养之道</span></div>
+      <div class="mode-card" data-mode="lab"><span class="m-icon">🧪</span><span class="m-name">化验分析</span><span class="m-desc">化验单 · 中医解读</span></div>
+      <div class="mode-card" data-mode="text"><span class="m-icon">📝</span><span class="m-name">文本辨证</span><span class="m-desc">症状输入 · 古籍依据</span></div>
+    </div>
+
+    <!-- ── 方式一：四诊合参（默认） ── -->
+    <div class="mode-panel active" id="mode-sizhen">
+      <!-- 问诊 -->
+      <div class="sub-card">
+        <h4>问诊 · 主诉症状</h4>
+        <div class="examples">
+          <span class="example-tag">最近总是口干舌燥，晚上睡不好</span>
+          <span class="example-tag">饭后腹胀，大便不成形</span>
+          <span class="example-tag">冬天手脚冰凉，夏天手心发热</span>
+          <span class="example-tag">经常头痛，特别是吹风后</span>
+        </div>
+        <textarea id="q" placeholder="例如：口干舌燥，睡不好，容易出汗..."></textarea>
+        <div id="consultErr" class="error"></div>
+      </div>
+      <!-- 望诊 -->
+      <div class="sub-card">
+        <h4>👅 舌象</h4>
+        <div class="upload-row">
+          <label class="file-label">📷 上传舌象照片
+            <input type="file" id="tongueFile" accept="image/*" onchange="handleImage('tongue',this)">
+          </label>
+          <button class="btn ghost" onclick="analyzeVision('tongue')">🔍 AI 识别舌象</button>
+        </div>
+        <div class="preview-box" id="tonguePreviewBox"><img id="tonguePreview" alt="舌象预览"><div class="file-meta" id="tongueName"></div></div>
+        <div id="tongueLoading" class="loading"><span class="spinner"></span>望舌辨证中...</div>
+        <div id="tongueErr" class="error"></div>
+        <textarea id="tongueResult" placeholder="AI 识别结果将显示于此（可修改）"></textarea>
+        <input type="text" id="tongueDesc" placeholder="或手动描述舌象，如：舌红苔黄腻、有齿痕">
+        <input type="hidden" id="tongueBase64">
+      </div>
+      <div class="sub-card">
+        <h4>🧑 面象</h4>
+        <div class="upload-row">
+          <label class="file-label">📷 上传面色照片
+            <input type="file" id="faceFile" accept="image/*" onchange="handleImage('face',this)">
+          </label>
+          <button class="btn ghost" onclick="analyzeVision('face')">🔍 AI 识别面色</button>
+        </div>
+        <div class="preview-box" id="facePreviewBox"><img id="facePreview" alt="面象预览"><div class="file-meta" id="faceName"></div></div>
+        <div id="faceLoading" class="loading"><span class="spinner"></span>察面辨证中...</div>
+        <div id="faceErr" class="error"></div>
+        <textarea id="faceResult" placeholder="AI 识别结果将显示于此（可修改）"></textarea>
+        <input type="text" id="faceDesc" placeholder="或手动描述面色，如：面色萎黄、晦暗">
+        <input type="hidden" id="faceBase64">
+      </div>
+      <!-- 闻诊 -->
+      <div class="sub-card">
+        <h4>🎙 语音闻诊</h4>
+        <p class="hint">点击录音，口述您的症状（如「最近总是头晕乏力」），或直接在下方填写转写文本。</p>
+        <div class="upload-row">
+          <button class="btn ghost" id="btnRecord" onclick="toggleRecord()">🎙 开始录音</button>
+          <span id="recTime" style="color:#b0c8d8;font-size:14px"></span>
+          <span id="recDot" class="recording-dot" style="display:none"></span>
+        </div>
+        <div class="file-meta" id="audioInfo"></div>
+        <button class="btn" id="btnTranscribe" onclick="transcribe()" disabled>✍️ 转写语音</button>
+        <div id="transLoading" class="loading"><span class="spinner"></span>语音转写中...</div>
+        <div id="audioErr" class="error"></div>
+        <textarea id="transcript" placeholder="语音转写结果将显示于此，也可手动填写症状描述"></textarea>
+        <input type="hidden" id="audioBase64">
+      </div>
+      <!-- 切诊 -->
+      <div class="sub-card">
+        <h4>切诊 · 脉象</h4>
+        <p class="hint">点击选择您的脉象特征（可多选）：</p>
+        <div class="pulse-chips" id="pulseChips">
+          <span class="pulse-chip" data-p="浮脉" onclick="togglePulse(this)">浮脉</span>
+          <span class="pulse-chip" data-p="沉脉" onclick="togglePulse(this)">沉脉</span>
+          <span class="pulse-chip" data-p="迟脉" onclick="togglePulse(this)">迟脉</span>
+          <span class="pulse-chip" data-p="数脉" onclick="togglePulse(this)">数脉</span>
+          <span class="pulse-chip" data-p="细脉" onclick="togglePulse(this)">细脉</span>
+          <span class="pulse-chip" data-p="弦脉" onclick="togglePulse(this)">弦脉</span>
+          <span class="pulse-chip" data-p="滑脉" onclick="togglePulse(this)">滑脉</span>
+          <span class="pulse-chip" data-p="涩脉" onclick="togglePulse(this)">涩脉</span>
+          <span class="pulse-chip" data-p="洪脉" onclick="togglePulse(this)">洪脉</span>
+          <span class="pulse-chip" data-p="缓脉" onclick="togglePulse(this)">缓脉</span>
+          <span class="pulse-chip" data-p="弱脉" onclick="togglePulse(this)">弱脉</span>
+          <span class="pulse-chip" data-p="结代脉" onclick="togglePulse(this)">结代脉</span>
+        </div>
+        <select id="pulseSelect" multiple size="4" onchange="onSelectChange()" style="width:100%;max-width:380px">
+          <option value="浮脉">浮脉 · 轻取即得（主表证）</option>
+          <option value="沉脉">沉脉 · 重按始得（主里证）</option>
+          <option value="迟脉">迟脉 · 一息不足四至（主寒证）</option>
+          <option value="数脉">数脉 · 一息五至以上（主热证）</option>
+          <option value="细脉">细脉 · 脉细如线（主血虚阴虚）</option>
+          <option value="弦脉">弦脉 · 端直如琴弦（主肝郁气滞）</option>
+          <option value="滑脉">滑脉 · 往来流利（主痰湿食积）</option>
+          <option value="涩脉">涩脉 · 艰涩不畅（主血瘀）</option>
+          <option value="洪脉">洪脉 · 来盛去衰（主实热）</option>
+          <option value="缓脉">缓脉 · 和缓从容（主脾虚湿盛）</option>
+          <option value="弱脉">弱脉 · 沉细而软（主气血虚）</option>
+          <option value="结代脉">结代脉 · 节律不齐（主心气虚血瘀）</option>
+        </select>
+        <div class="file-meta" id="pulseOut"></div>
+        <div style="margin-top:10px">
+          <button class="btn ghost" onclick="devicePulse()">📡 脉诊仪接入（预留）</button>
+        </div>
+        <div id="pulseErr" class="error"></div>
+      </div>
+      <div class="btn-row" style="display:flex;gap:10px;margin-top:12px">
+        <button class="btn" id="sizhen-btn">☯ 四诊合参</button>
+        <button class="btn ghost" id="sizhen-clear">清空</button>
+      </div>
+      <div id="sizhen-loading" class="loading"><span class="spinner"></span>四诊合参中，请稍候...</div>
+      <div id="sizhenErr" class="error"></div>
+    </div>
+
+    <!-- ── 方式二：体质辨识 ── -->
+    <div class="mode-panel" id="mode-constitution">
+      <div class="sub-card">
+        <h4>🧬 体质辨识 <small style="color:#7c9bc0">九种体质 · 调养之道</small></h4>
+        <p class="hint">勾选符合自身情况的症状，或补充描述，辨识九种中医体质及对应调养之道。</p>
+        <div class="chips" id="con-chips">
+          <span class="chip" data-s="怕冷，手足不温">怕冷</span>
+          <span class="chip" data-s="手足心热">手足心热</span>
+          <span class="chip" data-s="容易疲乏">易疲乏</span>
+          <span class="chip" data-s="气短懒言">气短懒言</span>
+          <span class="chip" data-s="口干咽燥">口干咽燥</span>
+          <span class="chip" data-s="口苦口黏">口苦口黏</span>
+          <span class="chip" data-s="易出汗，自汗">易出汗</span>
+          <span class="chip" data-s="大便溏稀">大便溏稀</span>
+          <span class="chip" data-s="大便干结">大便干结</span>
+          <span class="chip" data-s="失眠多梦">失眠多梦</span>
+          <span class="chip" data-s="胸闷痰多">胸闷痰多</span>
+          <span class="chip" data-s="头身沉重">头身沉重</span>
+          <span class="chip" data-s="面色萎黄">面色萎黄</span>
+          <span class="chip" data-s="急躁易怒">急躁易怒</span>
+          <span class="chip" data-s="食欲不振">食欲不振</span>
+          <span class="chip" data-s="腹胀">腹胀</span>
+          <span class="chip" data-s="腰膝酸软">腰膝酸软</span>
+          <span class="chip" data-s="易生瘀斑">易生瘀斑</span>
+          <span class="chip" data-s="舌苔厚腻">舌苔厚腻</span>
+          <span class="chip" data-s="喜热饮">喜热饮</span>
+          <span class="chip" data-s="喜冷饮">喜冷饮</span>
+          <span class="chip" data-s="皮肤易过敏">皮肤易过敏</span>
+        </div>
+        <textarea id="con-input" placeholder="补充描述（可选）：其他症状或情况，如身高体重、生活习惯等" style="min-height:60px"></textarea>
+        <div class="btn-row" style="display:flex;gap:10px;margin-top:12px">
+          <button class="btn" id="con-btn">辨识体质</button>
+          <button class="btn ghost" id="con-clear">清空</button>
+        </div>
+        <div id="con-loading" class="loading"><span class="spinner"></span>望闻问切，辨识体质……</div>
+      </div>
+    </div>
+
+    <!-- ── 方式三：化验分析 ── -->
+    <div class="mode-panel" id="mode-lab">
+      <div class="sub-card">
+        <h4>🧪 化验分析 <small style="color:#7c9bc0">化验单 → 中医解读</small></h4>
+        <p class="hint">上传化验单照片，识别指标后给出中医视角解读；也可手动输入指标文本。</p>
+        <div class="upload-box" id="lab-upload">
+          <span class="u-icon">🩺</span>
+          点击选择化验单图片（jpg / png）
+          <input type="file" id="lab-file" accept="image/*">
+        </div>
+        <div class="lab-preview" id="lab-preview">
+          <img id="lab-preview-img" alt="化验单预览">
+          <div class="file-meta" id="lab-preview-meta"></div>
+        </div>
+        <textarea id="lab-text" placeholder="或手动输入指标（可选），例如：血糖 8.2 mmol/L，总胆固醇 6.5 mmol/L，转氨酶 68 U/L" style="min-height:60px"></textarea>
+        <div class="btn-row" style="display:flex;gap:10px;margin-top:12px">
+          <button class="btn" id="lab-btn">分析报告</button>
+          <button class="btn ghost" id="lab-clear">清空</button>
+        </div>
+        <div id="lab-loading" class="loading"><span class="spinner"></span>识别指标，参详解读……</div>
+      </div>
+    </div>
+
+    <!-- ── 方式四：文本辨证 ── -->
+    <div class="mode-panel" id="mode-text">
+      <div class="sub-card">
+        <h4>📝 文本辨证 <small style="color:#7c9bc0">症状 → 证型 · 古籍依据</small></h4>
+        <p class="hint">描述你的不适，AI 结合古籍知识给出证型判断、分析、调理建议与方剂参考。</p>
+        <div class="examples">
+          <span class="example-tag">最近一周怕冷，四肢不温，小便清长，大便稀溏，精神疲倦</span>
+          <span class="example-tag">口干舌燥，晚上睡不好，手心发热</span>
+          <span class="example-tag">饭后腹胀，大便不成形，容易疲劳</span>
+        </div>
+        <textarea id="c-input" placeholder="例如：最近一周怕冷，四肢不温，小便清长，大便稀溏，精神疲倦"></textarea>
+        <div class="btn-row" style="display:flex;gap:10px;margin-top:12px">
+          <button class="btn" id="c-btn">开始辨证</button>
+          <button class="btn ghost" id="c-clear">清空</button>
+        </div>
+        <div id="c-loading" class="loading"><span class="spinner"></span>望闻问切，潜心辨证……</div>
+      </div>
+    </div>
+
+    <!-- ── 辨证结果统一展示区 ── -->
+    <div class="sub-card" id="diag-result-card" style="display:none">
+      <h4>📋 辨证结果</h4>
+      <div id="diag-result" class="result"></div>
+      <div class="link-btns">
+        <button class="btn" id="diag-to-plan">📖 查看调理方案</button>
+        <button class="btn ghost" id="diag-save">💾 存入健康档案</button>
+        <span id="diag-save-msg" class="save-ok"></span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ Tab 调理方案 ═══ -->
+<div class="tab-panel" id="tab-plan">
+  <div class="card">
+    <div class="section-title">调理方案 <small>证型 → 方剂 · 食疗 · 穴位</small></div>
+    <p class="hint">选择或输入一个证型（如「肝气郁结」「脾气虚弱」「阴虚火旺」），或直接输入症状，获取对应方剂、饮食与穴位建议。</p>
+    <select id="p-select" style="width:100%;max-width:380px">
+      <option value="">—— 请选择证型 ——</option>
+      <option>肝气郁结</option>
+      <option>脾气虚弱</option>
+      <option>阴虚火旺</option>
+      <option>湿热内蕴</option>
+      <option>气虚血瘀</option>
+      <option>寒湿困脾</option>
+      <option>脾气虚</option>
+      <option>痰热壅肺</option>
+      <option>心脾两虚</option>
+      <option>肾阳虚衰</option>
+    </select>
+    <input type="text" id="p-input" placeholder="或自定义证型名称 / 输入症状，如：气阴两虚">
+    <div class="btn-row" style="display:flex;gap:10px;margin-top:12px">
+      <button class="btn" id="p-btn">查询方案</button>
+      <button class="btn ghost" id="p-clear">清空</button>
+    </div>
+    <div id="p-loading" class="loading"><span class="spinner"></span>翻阅医典，配伍组方……</div>
+    <div id="p-result" class="result"></div>
+    <div class="link-btns" id="p-save-row" style="display:none">
+      <button class="btn ghost" id="p-save-btn">💾 存入健康档案</button>
+      <span id="p-save-msg" class="save-ok"></span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ Tab 健康档案 ═══ -->
+<div class="tab-panel" id="tab-profile">
+  <div class="card">
+    <div class="section-title">档案管理 <small>创建 / 切换 · 家庭档案</small></div>
+    <p class="hint">选择已有档案，或新建一个家庭成员档案。档案用于保存体质、问诊历史，并生成个性化健康计划。</p>
+    <div class="pf-row">
+      <select id="pf-user-select">
+        <option value="">—— 请选择档案 ——</option>
+        <option value="me">我（me）</option>
+        <option value="对象">对象</option>
+        <option value="爸爸">爸爸</option>
+        <option value="妈妈">妈妈</option>
+      </select>
+      <button class="btn ghost" id="pf-load-btn">载入档案</button>
+      <button class="btn" id="pf-create-btn">新建档案</button>
+    </div>
+    <div class="pf-fields">
+      <label><em>档案名称</em><input type="text" id="pf-name" placeholder="如：我自己 / 爸爸"></label>
+      <label><em>年龄</em><input type="text" id="pf-age" placeholder="如：35"></label>
+      <label><em>性别</em>
+        <select id="pf-gender">
+          <option value="">请选择</option>
+          <option value="男">男</option>
+          <option value="女">女</option>
+        </select>
+      </label>
+    </div>
+    <div class="btn-row" style="display:flex;gap:10px">
+      <button class="btn" id="pf-save-btn">保存档案</button>
+      <span id="pf-status" style="color:#b0c8d8;font-size:13px;align-self:center"></span>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="section-title">体质选择 <small>九种体质 · 因人制宜</small></div>
+    <p class="hint">选择最符合自己的体质类型（可参考「AI辨证 · 体质辨识」的结果）。</p>
+    <select id="pf-constitution" style="width:100%;max-width:380px;padding:10px 14px;font-size:15px">
+      <option value="平和质">平和质 · 阴阳调和</option>
+      <option value="气虚质">气虚质 · 易疲乏</option>
+      <option value="阳虚质">阳虚质 · 怕冷</option>
+      <option value="阴虚质">阴虚质 · 怕热口干</option>
+      <option value="痰湿质">痰湿质 · 体胖多痰</option>
+      <option value="湿热质">湿热质 · 口苦油腻</option>
+      <option value="血瘀质">血瘀质 · 易瘀斑</option>
+      <option value="气郁质">气郁质 · 易郁闷</option>
+      <option value="特禀质">特禀质 · 易过敏</option>
+    </select>
+  </div>
+
+  <div class="card">
+    <div class="section-title">症状输入 <small>点选常见不适 · 可自定义</small></div>
+    <p class="hint">点击下方症状标签可多选（再点取消），亦可自行补充其他症状。也可点击「自动生成档案」将最近一次辨证结果自动填入。</p>
+    <div class="btn-row" style="display:flex;gap:10px;margin-bottom:12px">
+      <button class="btn ghost" id="pf-autofill-btn">✨ 自动生成档案（从辨证结果）</button>
+    </div>
+    <div class="chips" id="pf-cond-chips">
+      <span class="chip" data-s="失眠">失眠</span>
+      <span class="chip" data-s="便秘">便秘</span>
+      <span class="chip" data-s="疲劳">疲劳</span>
+      <span class="chip" data-s="怕冷">怕冷</span>
+      <span class="chip" data-s="口干">口干</span>
+      <span class="chip" data-s="胸闷">胸闷</span>
+      <span class="chip" data-s="头晕">头晕</span>
+      <span class="chip" data-s="多梦">多梦</span>
+      <span class="chip" data-s="腹胀">腹胀</span>
+      <span class="chip" data-s="食欲不振">食欲不振</span>
+      <span class="chip" data-s="腰膝酸软">腰膝酸软</span>
+      <span class="chip" data-s="易出汗">易出汗</span>
+      <span class="chip" data-s="急躁易怒">急躁易怒</span>
+      <span class="chip" data-s="皮肤过敏">皮肤过敏</span>
+    </div>
+    <input type="text" id="pf-cond-custom" placeholder="自定义症状（可多个，用顿号分隔），如：气短、大便溏稀">
+    <div class="btn-row" style="display:flex;gap:10px">
+      <button class="btn" id="pf-gen-btn">生成健康计划</button>
+      <button class="btn ghost" id="pf-cond-clear">清空症状</button>
+    </div>
+    <div id="pf-gen-loading" class="loading"><span class="spinner"></span>因人制宜，拟定调理计划……</div>
+    <div id="pf-plan"></div>
+  </div>
+
+  <div class="card">
+    <div class="section-title">打卡记录 <small>执行情况 · 每日打卡</small></div>
+    <p class="hint">选择档案后，记录今日执行情况（作息 / 饮食 / 运动）。</p>
+    <div class="pf-row">
+      <select id="pf-checkin-item">
+        <option value="作息">作息</option>
+        <option value="饮食">饮食</option>
+        <option value="运动">运动</option>
+        <option value="穴位">穴位</option>
+        <option value="情志">情志</option>
+      </select>
+      <button class="btn" id="pf-checkin-btn">✅ 打卡</button>
+      <button class="btn ghost" id="pf-week-btn">📊 周执行率</button>
+    </div>
+    <div id="pf-checkin-result" style="color:#b0c8d8;font-size:13px;line-height:1.8;margin-top:8px"></div>
+  </div>
+
+  <div class="card">
+    <div class="section-title">问诊历史 <small>历次辨证记录 · 健康追踪</small></div>
+    <div class="btn-row" style="display:flex;gap:10px">
+      <button class="btn ghost" id="pf-history-btn">查看问诊历史</button>
+      <button class="btn ghost" id="pf-trend-btn">📈 健康趋势</button>
+    </div>
+    <div id="pf-history" style="margin-top:12px"></div>
+  </div>
+</div>
+
+<!-- ═══ Tab 古籍检索 ═══ -->
+<div class="tab-panel" id="tab-query">
+  <div class="card">
+    <div class="section-title">古籍检索 <small>经典医籍 · 原文片段</small></div>
+    <p class="hint">输入症状或病名，从《黄帝内经》《伤寒论》等经典医籍中检索相关原文片段。</p>
+    <div class="examples">
+      <span class="example-tag">发热恶寒，头痛无汗，脉浮紧</span>
+      <span class="example-tag">口干舌燥</span>
+      <span class="example-tag">脾虚湿盛</span>
+    </div>
+    <textarea id="q-input" placeholder="例如：发热恶寒，头痛无汗，脉浮紧" style="min-height:60px"></textarea>
+    <div class="btn-row" style="display:flex;gap:10px;margin-top:12px">
+      <button class="btn" id="q-btn">检索古籍</button>
+      <button class="btn ghost" id="q-clear">清空</button>
+    </div>
+    <div id="q-loading" class="loading"><span class="spinner"></span>正在翻阅典籍……</div>
+    <div id="q-result" class="result"></div>
+  </div>
+</div>
+
+<div class="footer">仅供学习参考 · 不构成医疗建议 · AI 生成内容请辨证看待</div>
+</div>
+<script>
+function showErr(id,msg){ var el=document.getElementById(id); if(el){ el.textContent=msg; el.style.display=msg?'block':'none'; } }
+function setLoading(id,on){ var el=document.getElementById(id); if(el) el.style.display=on?'block':'none'; }
+function esc(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+/* ── Tab 切换 ── */
+function switchTab(id){
+  document.querySelectorAll('.tab-btn').forEach(function(b){ b.classList.toggle('active', b.getAttribute('data-tab')===id); });
+  document.querySelectorAll('.tab-panel').forEach(function(p){ p.classList.toggle('active', p.id===id); });
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+(function(){
+  var tabs=document.getElementById('tabs');
+  if(!tabs) return;
+  tabs.addEventListener('click',function(e){
+    var btn=e.target.closest('.tab-btn');
+    if(!btn) return;
+    switchTab(btn.getAttribute('data-tab'));
+  });
+})();
+
+/* ── 辨证方式卡片切换（AI辨证 tab 内） ── */
+(function(){
+  var cards=document.getElementById('mode-cards');
+  if(!cards) return;
+  cards.addEventListener('click',function(e){
+    var card=e.target.closest('.mode-card');
+    if(!card) return;
+    var mode=card.getAttribute('data-mode');
+    document.querySelectorAll('.mode-card').forEach(function(c){ c.classList.toggle('active', c===card); });
+    document.querySelectorAll('.mode-panel').forEach(function(p){ p.classList.toggle('active', p.id==='mode-'+mode); });
+  });
+})();
+
+/* ── 通用结果渲染 ── */
+var SECTION_MAP=[
+  ['pattern','证型'],['constitution','体质判定'],['type','类型'],['analysis','辨证分析'],
+  ['suggestion','调理建议'],['advice','调理建议'],['plan','调理方案'],['formula','方剂'],
+  ['prescription','方剂'],['diet','饮食调养'],['food','饮食调养'],['acupoints','穴位保健'],
+  ['points','穴位保健'],['acupuncture','穴位保健'],['evidence','辨证依据'],['basis','辨证依据'],
+  ['description','特征描述'],['feature','特征描述'],['indicators','化验指标'],['interpretation','中医解读'],
+  ['read','中医解读'],['risk','风险提示'],['warn','注意事项'],['note','备注'],['summary','总结'],['conclusion','结论']
+];
+function renderValue(v){
+  if(v==null) return '';
+  if(Array.isArray(v)){
+    var out='<ul>';
+    v.forEach(function(x){
+      if(x&&typeof x==='object'){ out+='<li>'+renderObject(x)+'</li>'; }
+      else{ out+='<li>'+esc(x)+'</li>'; }
+    });
+    return out+'</ul>';
+  }
+  if(typeof v==='object') return renderObject(v);
+  return esc(v);
+}
+function renderObject(obj){
+  var html='',used={};
+  SECTION_MAP.forEach(function(pair){
+    var key=pair[0],title=pair[1];
+    if(used[key]) return;
+    var v=obj[key];
+    if(v===undefined||v===null||v==='') v=obj[title];
+    if(v===undefined||v===null||v==='') return;
+    if(typeof v==='object'&&Object.keys(v).length===0) return;
+    used[key]=true;
+    html+='<div class="res-section"><div class="rs-title">'+title+'</div><div class="rs-body">'+renderValue(v)+'</div></div>';
+  });
+  Object.keys(obj).forEach(function(key){
+    if(used[key]) return;
+    if(SECTION_MAP.some(function(p){ return p[0]===key||p[1]===key; })) return;
+    var v=obj[key];
+    if(v===undefined||v===null||v==='') return;
+    if(typeof v==='object'){ html+=renderObject(v); return; }
+    html+='<div class="res-section"><div class="rs-title">'+esc(key)+'</div><div class="rs-body">'+esc(v)+'</div></div>';
+  });
+  return html||'<div class="res-raw">'+esc(JSON.stringify(obj))+'</div>';
+}
+function renderResult(id,data){
+  var box=document.getElementById(id);
+  if(!box) return;
+  box.innerHTML='';
+  if(data&&data.error){
+    box.innerHTML='<div class="res-error">'+esc(data.error)+'</div>';
+  }else if(data&&typeof data==='string'){
+    box.innerHTML='<div class="res-section"><div class="rs-body">'+data.replace(/\n/g,'<br>')+'</div></div>';
+  }else if(data&&typeof data.result==='string'&&Object.keys(data).length===1){
+    box.innerHTML='<div class="res-section"><div class="rs-body">'+esc(data.result).replace(/\n/g,'<br>')+'</div></div>';
+  }else if(data&&typeof data==='object'){
+    box.innerHTML=renderObject(data);
+  }else{
+    box.innerHTML='<div class="res-error">未返回有效结果</div>';
+  }
+}
+function post(url,payload){
+  return fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)})
+  .then(function(r){ return r.json().catch(function(){ return {error:'服务器返回异常（HTTP '+r.status+'）'}; }); });
+}
+function submit(url,payload,loadingId,resultId){
+  setLoading(loadingId,true);
+  var box=document.getElementById(resultId);
+  if(box) box.innerHTML='';
+  return post(url,payload).then(function(data){
+    setLoading(loadingId,false);
+    renderResult(resultId,data);
+  }).catch(function(err){
+    setLoading(loadingId,false);
+    renderResult(resultId,{error:'请求失败：'+err.message});
+  });
+}
+function bindClick(id,fn){ var el=document.getElementById(id); if(el) el.addEventListener('click',fn); }
+
+/* ══ 辨证结果：统一收集 + 联动按钮 ══ */
+var lastDiag={mode:'',query:'',pattern:'',constitution:'',text:'',data:null};
+function diagShow(meta,html){
+  lastDiag=meta;
+  var card=document.getElementById('diag-result-card');
+  var box=document.getElementById('diag-result');
+  if(!card||!box) return;
+  box.innerHTML=html;
+  card.style.display='block';
+  document.getElementById('diag-save-msg').textContent='';
+}
+function diagHide(){ var c=document.getElementById('diag-result-card'); if(c) c.style.display='none'; }
+function diagRenderSections(meta,obj){
+  var h='';
+  if(meta.pattern) h+='<div class="res-section"><div class="rs-title">证型</div><div class="rs-body">'+esc(meta.pattern)+'</div></div>';
+  if(meta.constitution) h+='<div class="res-section"><div class="rs-title">体质</div><div class="rs-body">'+esc(meta.constitution)+'</div></div>';
+  h+=renderObject(obj);
+  diagShow(meta,h);
+}
+function diagRenderRaw(meta,raw){
+  if(!raw) return;
+  var h='<div class="res-section"><div class="rs-title">AI 辨证</div><div class="rs-body">'+esc(raw).replace(/\n/g,'<br>')+'</div></div>';
+  diagShow(meta,h);
+}
+function diagFromData(data){
+  /* 从 API 返回对象中提取证型/体质关键词 */
+  var keys=['pattern','pattern_name','证型','constitution','体质判定','体质'];
+  var p='',c='';
+  for(var i=0;i<keys.length;i++){
+    var v=data[keys[i]];
+    if(v&&typeof v==='string'){ if(!p&&/证|郁|虚|湿|热|寒|瘀|痰|火/.test(v)) p=v; if(!c&&/(质)$/.test(v)) c=v; }
+  }
+  if(data.matched_patterns&&data.matched_patterns.length&&!p) p=data.matched_patterns[0];
+  if(data.plan){ var pl=data.plan; if(!p&&pl.pattern_name) p=pl.pattern_name; }
+  return {pattern:p,constitution:c};
+}
+function diagExtractText(data){
+  var keys=['ai_diagnosis','analysis','辨证分析','conclusion','result','text','summary','description','调理建议','advice'];
+  for(var i=0;i<keys.length;i++){
+    var v=data[keys[i]];
+    if(v&&typeof v==='string'&&v.trim()) return v;
+  }
+  try{ var s=JSON.stringify(data); if(s&&s!=='{}') return s; }catch(e){}
+  return '';
+}
+function diagSaveToProfile(){
+  var msg=document.getElementById('diag-save-msg');
+  var uid=pfUser()||pfCurUser;
+  if(!uid){ if(msg) msg.textContent='⚠️ 请先到「健康档案」选择或创建档案'; return; }
+  var entry={user_id:uid,query:lastDiag.query||'',result:lastDiag.text||''};
+  if(lastDiag.pattern) entry.pattern=lastDiag.pattern;
+  if(lastDiag.constitution) entry.constitution=lastDiag.constitution;
+  if(lastDiag.mode) entry.mode=lastDiag.mode;
+  if(!entry.query&&!entry.result){ if(msg) msg.textContent='暂无可保存的辨证结果'; return; }
+  post('/api/profile/history',entry).then(function(d){
+    if(d&&d.saved){ if(msg) msg.textContent='✅ 已存入档案：'+(lastDiag.pattern||lastDiag.constitution||'辨证结果'); }
+    else{ if(msg) msg.textContent='❌ 保存失败：'+(d&&d.error?d.error:'未知错误'); }
+  }).catch(function(e){ if(msg) msg.textContent='❌ 保存失败：'+e.message; });
+}
+bindClick('diag-to-plan',function(){
+  if(!lastDiag.mode){ return; }
+  var v=lastDiag.pattern||lastDiag.query||'';
+  switchTab('tab-plan');
+  var sel=document.getElementById('p-select');
+  var inp=document.getElementById('p-input');
+  if(sel) sel.value='';
+  if(inp) inp.value=v;
+  document.getElementById('p-save-row').style.display='none';
+  document.getElementById('p-result').innerHTML='';
+  if(v){ document.getElementById('p-btn').click(); }
+});
+bindClick('diag-save',diagSaveToProfile);
+bindClick('p-save-btn',function(){
+  var msg=document.getElementById('p-save-msg');
+  var uid=pfUser()||pfCurUser;
+  if(!uid){ if(msg) msg.textContent='⚠️ 请先到「健康档案」选择或创建档案'; return; }
+  var q=document.getElementById('p-input').value.trim()||document.getElementById('p-select').value||'';
+  var box=document.getElementById('p-result');
+  var txt=box?box.textContent.trim():'';
+  post('/api/profile/history',{user_id:uid,query:q,result:txt||'调理方案'}).then(function(d){
+    if(msg) msg.textContent=(d&&d.saved)?'✅ 已存入档案：'+q:'❌ 保存失败：'+(d&&d.error?d.error:'未知错误');
+  }).catch(function(e){ if(msg) msg.textContent='❌ 保存失败：'+e.message; });
+});
+
+/* ── 方式一：四诊合参 ── */
+bindClick('sizhen-btn',function(){
+  var payload={
+    query:document.getElementById('q').value.trim(),
+    tongue:document.getElementById('tongueResult').value.trim()||document.getElementById('tongueDesc').value.trim(),
+    face:document.getElementById('faceResult').value.trim()||document.getElementById('faceDesc').value.trim(),
+    transcript:document.getElementById('transcript').value.trim(),
+    pulse:getPulses()
+  };
+  if(!payload.query&&!payload.tongue&&!payload.face&&!payload.transcript&&!payload.pulse){
+    showErr('sizhenErr','请至少填写一项四诊信息（问诊症状 / 舌象 / 面象 / 语音 / 脉象）');
+    return;
+  }
+  showErr('sizhenErr','');
+  diagHide();
+  setLoading('sizhen-loading',true);
+  post('/api/four_diagnostics',payload).then(function(d){
+    setLoading('sizhen-loading',false);
+    if(d.error){ showErr('sizhenErr',d.error); return; }
+    var html='';
+    var pats=(d.rule_patterns||[]).filter(function(x){ return x; });
+    if(pats.length){
+      html+='<div class="res-section"><div class="rs-title">规则倾向（初步）</div><div class="rs-body"><div class="tag-row">';
+      pats.forEach(function(p){ html+='<span class="tag">'+esc(p)+'</span>'; });
+      html+='</div></div></div>';
+    }
+    if(d.four_diagnostics){
+      var fd=d.four_diagnostics;
+      html+='<div class="res-section"><div class="rs-title">四诊资料</div><div class="rs-body"><table class="diag-table">';
+      ['问','望(舌)','望(面)','闻(语音)','切(脉)'].forEach(function(k){
+        if(fd[k] && fd[k]!=='无') html+='<tr><td>'+k+'</td><td>'+esc(fd[k])+'</td></tr>';
+      });
+      html+='</table></div></div>';
+    }
+    if(d.ai_diagnosis){
+      html+='<div class="res-section"><div class="rs-title">AI 辨证</div><div class="rs-body">'+esc(d.ai_diagnosis).replace(/\n/g,'<br>')+'</div></div>';
+    }
+    if(d.note) html+='<div class="note">'+esc(d.note)+'</div>';
+    if(!html) html='❌ 未获得辨证结果';
+    var meta={
+      mode:'four_diagnostics',
+      query:payload.query,
+      pattern:findPattern(d.ai_diagnosis||''),
+      constitution:'',
+      text:d.ai_diagnosis||html,
+      data:d
+    };
+    diagShow(meta,html);
+  }).catch(function(e){
+    setLoading('sizhen-loading',false);
+    showErr('sizhenErr','请求失败: '+e.message);
+  });
+});
+bindClick('sizhen-clear',function(){
+  ['q','tongueResult','tongueDesc','faceResult','faceDesc','transcript'].forEach(function(id){
+    var el=document.getElementById(id); if(el) el.value='';
+  });
+  document.querySelectorAll('.pulse-chip').forEach(function(c){ c.classList.remove('active'); });
+  var sel=document.getElementById('pulseSelect');
+  if(sel){ for(var i=0;i<sel.options.length;i++) sel.options[i].selected=false; }
+  updatePulseOut();
+  diagHide();
+});
+
+/* ── 方式二：体质辨识 ── */
+var conChips=document.querySelectorAll('#con-chips .chip');
+conChips.forEach(function(chip){ chip.addEventListener('click',function(){ chip.classList.toggle('on'); }); });
+bindClick('con-btn',function(){
+  var selected=[];
+  document.querySelectorAll('#con-chips .chip.on').forEach(function(c){ selected.push(c.getAttribute('data-s')); });
+  var extra=document.getElementById('con-input').value.trim();
+  if(extra) selected.push(extra);
+  if(!selected.length){ showErr('conErr','请至少勾选一个症状'); return; }
+  showErr('conErr','');
+  diagHide();
+  setLoading('con-loading',true);
+  post('/api/constitution',{symptoms:selected.join('，')}).then(function(d){
+    setLoading('con-loading',false);
+    if(d.error){ showErr('conErr',d.error); return; }
+    var html=renderObject(d);
+    var meta={mode:'constitution',query:selected.join('，'),pattern:'',constitution:d.constitution||'',text:diagExtractText(d)||selected.join('，'),data:d};
+    diagShow(meta,html);
+  }).catch(function(e){
+    setLoading('con-loading',false);
+    showErr('conErr','请求失败：'+e.message);
+  });
+});
+bindClick('con-clear',function(){
+  conChips.forEach(function(c){ c.classList.remove('on'); });
+  document.getElementById('con-input').value='';
+  diagHide();
+});
+
+/* ── 方式三：化验分析 ── */
+var labImageBase64='';
+var labUpload=document.getElementById('lab-upload');
+if(labUpload) labUpload.addEventListener('click',function(){ document.getElementById('lab-file').click(); });
+var labFile=document.getElementById('lab-file');
+if(labFile) labFile.addEventListener('change',function(){
+  var file=this.files&&this.files[0];
+  if(!file) return;
+  if(file.type.indexOf('image/')!==0){ showErr('labErr','请选择图片文件（jpg / png 等）'); return; }
+  if(file.size>8*1024*1024){ showErr('labErr','图片过大（超过 8MB），请压缩后重试'); return; }
+  var reader=new FileReader();
+  reader.onload=function(e){
+    var dataUrl=e.target.result;
+    labImageBase64=dataUrl.split(',')[1]||'';
+    document.getElementById('lab-preview-img').src=dataUrl;
+    document.getElementById('lab-preview-meta').textContent=file.name+'（'+(file.size/1024).toFixed(0)+' KB）';
+    document.getElementById('lab-preview').style.display='block';
+    diagHide();
+  };
+  reader.readAsDataURL(file);
+});
+bindClick('lab-btn',function(){
+  var text=document.getElementById('lab-text').value.trim();
+  if(!labImageBase64&&!text){ showErr('labErr','请上传化验单图片或输入指标文本'); return; }
+  showErr('labErr','');
+  diagHide();
+  setLoading('lab-loading',true);
+  post('/api/lab',{image:labImageBase64,text:text}).then(function(d){
+    setLoading('lab-loading',false);
+    if(d.error){ showErr('labErr',d.error+(d.hint?'\n'+d.hint:'')); return; }
+    var html=renderObject(d);
+    var pats=[];
+    if(d.interpretations){ d.interpretations.forEach(function(it){ if(it&&it.related_patterns){ pats=pats.concat(it.related_patterns); } }); }
+    if(d.tcm_analysis&&d.tcm_analysis.patterns){ d.tcm_analysis.patterns.forEach(function(p){ if(p&&p[0]) pats.push(p[0]); }); }
+    pats=pats.filter(function(v,i,a){ return v&&a.indexOf(v)===i; });
+    var meta={mode:'lab',query:text||'化验单分析',pattern:pats[0]||'',constitution:'',text:diagExtractText(d)||text,data:d};
+    diagShow(meta,html);
+  }).catch(function(e){
+    setLoading('lab-loading',false);
+    showErr('labErr','请求失败：'+e.message);
+  });
+});
+bindClick('lab-clear',function(){
+  labImageBase64='';
+  document.getElementById('lab-file').value='';
+  document.getElementById('lab-text').value='';
+  document.getElementById('lab-preview').style.display='none';
+  document.getElementById('lab-preview-img').src='';
+  document.getElementById('lab-preview-meta').textContent='';
+  diagHide();
+});
+
+/* ── 方式四：文本辨证 ── */
+bindClick('c-btn',function(){
+  var q=document.getElementById('c-input').value.trim();
+  if(!q){ showErr('cErr','请输入症状描述'); return; }
+  showErr('cErr','');
+  diagHide();
+  setLoading('c-loading',true);
+  post('/api/consult',{query:q,top_k:5}).then(function(d){
+    setLoading('c-loading',false);
+    if(d.error){ showErr('cErr',d.error); return; }
+    var html='';
+    if(d.ai_diagnosis){
+      html+='<div class="res-section"><div class="rs-title">AI 辨证</div><div class="rs-body">'+esc(d.ai_diagnosis).replace(/\n/g,'<br>')+'</div></div>';
+    }
+    if(d.raw&&d.raw.length){
+      html+='<div class="res-section"><div class="rs-title">古籍依据</div><div class="rs-body">';
+      d.raw.forEach(function(r){
+        html+='<div style="margin-bottom:8px"><b style="color:#d4a853">'+esc(r.source)+'</b>（相关度:'+esc(r.score)+'）<br>'+esc(r.text)+'</div>';
+      });
+      html+='</div></div>';
+    }
+    if(!html) html='❌ 未获得辨证结果';
+    var meta={mode:'consult',query:q,pattern:findPattern(d.ai_diagnosis||''),constitution:'',text:d.ai_diagnosis||q,data:d};
+    diagShow(meta,html);
+  }).catch(function(e){
+    setLoading('c-loading',false);
+    showErr('cErr','请求失败：'+e.message);
+  });
+});
+bindClick('c-clear',function(){ document.getElementById('c-input').value=''; diagHide(); });
+
+/* ── 望诊：图片上传 + AI 识别 ── */
+var MAX_IMG = 8*1024*1024;
+function handleImage(kind,input){
+  var f=input.files[0];
+  if(!f) return;
+  if(f.size>MAX_IMG){ showErr(kind+'Err','图片超过 8MB 限制，请压缩后重试'); input.value=''; return; }
+  showErr(kind+'Err','');
+  var img=document.getElementById(kind+'Preview');
+  img.src=URL.createObjectURL(f);
+  document.getElementById(kind+'PreviewBox').style.display='block';
+  document.getElementById(kind+'Name').textContent=f.name+'（'+Math.round(f.size/1024)+' KB）';
+  var reader=new FileReader();
+  reader.onloadend=function(){
+    document.getElementById(kind+'Base64').value=(reader.result||'').split(',')[1]||'';
+  };
+  reader.readAsDataURL(f);
+}
+function analyzeVision(kind){
+  var b64=document.getElementById(kind+'Base64').value;
+  if(!b64){ showErr(kind+'Err','请先上传图片'); return; }
+  showErr(kind+'Err','');
+  setLoading(kind+'Loading',true);
+  fetch('/api/vision',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({kind:kind,image:b64})})
+  .then(r=>r.json()).then(d=>{
+    var txt=extractText(d);
+    if(txt){ document.getElementById(kind+'Result').value=txt; }
+    else{ showErr(kind+'Err',d.error||'识别失败，请手动描述'); }
+  }).catch(function(e){ showErr(kind+'Err','识别请求失败: '+e.message); })
+  .finally(function(){ setLoading(kind+'Loading',false); });
+}
+function extractText(d){
+  if(!d || typeof d!=='object') return '';
+  var keys=['description','desc','text','result','analysis','caption','output','content','ai_diagnosis','舌象描述','面象描述'];
+  for(var i=0;i<keys.length;i++){
+    if(typeof d[keys[i]]==='string' && d[keys[i]].trim()) return d[keys[i]];
+  }
+  try{ var s=JSON.stringify(d); if(s && s!=='{}') return s; }catch(e){}
+  return '';
+}
+function findPattern(t){
+  /* 从辨证文本中粗提取证型（如「肝气郁结」「阴虚火旺」），严格匹配 + 黑名单过滤 */
+  if(!t) return '';
+  var re=/([\u4e00-\u9fff]{2,5}(?:证|郁|虚|湿|热|寒|瘀|痰|滞|亏|燥|盛|衰))/g;
+  var BLACK=['进行','属于','辨证','分析','可以','需要','表示','说明','出现','引起','导致','可能','建议','注意','考虑','问题','情况','症状','体质','调理','治疗','比较','明显','加重','改善','一般','主要','同时','还有','或者','如果','因为','所以','但是','虽然','已经','开始','这样','这个','自己','身体','健康','疾病','有关','相关','方面','部分','程度','时候','时间','经常','容易','患者','医生','临床','表现','舌红','苔黄','面色','脉象','舌苔','脉细','脉弦','脉数','脉沉','脉滑','脉涩','脉浮','脉迟','脉缓','脉弱','属于'];
+  var seen={},out=[];
+  var m;
+  while((m=re.exec(t))!==null){
+    var s=m[1];
+    if(s.length<2||s.length>6) continue;
+    if(BLACK.indexOf(s)>=0) continue;
+    if(seen[s]) continue;
+    seen[s]=true;
+    out.push(s);
+    if(out.length>=4) break;
+  }
+  return out.join('、');
+}
+
+/* ── 闻诊：录音 + 转写 ── */
+var mediaRecorder=null,audioChunks=[],recTimer=null,recSec=0;
+function toggleRecord(){
+  if(mediaRecorder && mediaRecorder.state==='recording'){ stopRecord(); return; }
+  showErr('audioErr','');
+  if(!navigator.mediaDevices || !window.MediaRecorder){
+    showErr('audioErr','当前浏览器不支持录音，请使用 Chrome/Edge 或手动填写转写文本'); return;
+  }
+  navigator.mediaDevices.getUserMedia({audio:true}).then(function(stream){
+    mediaRecorder=new MediaRecorder(stream);
+    audioChunks=[];
+    mediaRecorder.ondataavailable=function(e){ if(e.data&&e.data.size>0) audioChunks.push(e.data); };
+    mediaRecorder.onstop=function(){
+      var blob=new Blob(audioChunks,{type:mediaRecorder.mimeType||'audio/webm'});
+      stream.getTracks().forEach(function(t){ t.stop(); });
+      var reader=new FileReader();
+      reader.onloadend=function(){
+        document.getElementById('audioBase64').value=(reader.result||'').split(',')[1]||'';
+        document.getElementById('audioInfo').textContent='已录制 '+recSec+' 秒（'+Math.round(blob.size/1024)+' KB）';
+        document.getElementById('btnTranscribe').disabled=false;
+      };
+      reader.readAsDataURL(blob);
+    };
+    mediaRecorder.start();
+    recSec=0;
+    document.getElementById('recTime').textContent='录音中…';
+    document.getElementById('recDot').style.display='inline-block';
+    document.getElementById('btnRecord').textContent='⏹ 停止录音';
+    document.getElementById('btnRecord').classList.add('danger');
+    recTimer=setInterval(function(){
+      recSec++;
+      document.getElementById('recTime').textContent='录音中 '+recSec+' 秒';
+      if(recSec>=300){ stopRecord(); }
+    },1000);
+  }).catch(function(err){
+    showErr('audioErr','无法访问麦克风（'+err.message+'），请授权后重试或手动填写转写文本');
+  });
+}
+function stopRecord(){
+  if(!mediaRecorder) return;
+  clearInterval(recTimer);
+  mediaRecorder.stop();
+  document.getElementById('recTime').textContent='';
+  document.getElementById('recDot').style.display='none';
+  document.getElementById('btnRecord').textContent='🎙 重新录音';
+  document.getElementById('btnRecord').classList.remove('danger');
+}
+function transcribe(){
+  var b64=document.getElementById('audioBase64').value;
+  if(!b64){ showErr('audioErr','请先录音'); return; }
+  showErr('audioErr','');
+  document.getElementById('btnTranscribe').disabled=true;
+  setLoading('transLoading',true);
+  fetch('/api/transcribe',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({audio:b64})})
+  .then(r=>r.json()).then(d=>{
+    var t=d.transcript||d.text||d.result||'';
+    if(t){ document.getElementById('transcript').value=t; }
+    else{ showErr('audioErr',d.error||'转写失败，请手动填写转写文本'); }
+  }).catch(function(e){ showErr('audioErr','转写请求失败: '+e.message); })
+  .finally(function(){
+    document.getElementById('btnTranscribe').disabled=false;
+    setLoading('transLoading',false);
+  });
+}
+
+/* ── 切诊：脉象多选 ── */
+function togglePulse(chip){
+  var p=chip.getAttribute('data-p');
+  chip.classList.toggle('active');
+  var opt=document.getElementById('pulseSelect').querySelector('option[value="'+p+'"]');
+  if(opt) opt.selected=chip.classList.contains('active');
+  updatePulseOut();
+}
+function onSelectChange(){
+  var sel=document.getElementById('pulseSelect');
+  document.querySelectorAll('.pulse-chip').forEach(function(c){
+    var opt=sel.querySelector('option[value="'+c.getAttribute('data-p')+'\"]');
+    c.classList.toggle('active',opt?opt.selected:false);
+  });
+  updatePulseOut();
+}
+function updatePulseOut(){
+  var arr=[];
+  document.querySelectorAll('.pulse-chip.active').forEach(function(c){ arr.push(c.getAttribute('data-p')); });
+  document.getElementById('pulseOut').textContent=arr.length?('已选脉象：'+arr.join('、')):'';
+}
+function getPulses(){
+  var arr=[];
+  document.querySelectorAll('.pulse-chip.active').forEach(function(c){ arr.push(c.getAttribute('data-p')); });
+  return arr.join('、');
+}
+function devicePulse(){
+  showErr('pulseErr','📡 脉诊仪数据接口预留中，敬请期待');
+}
+
+/* ── 调理方案 Tab ── */
+var pSel=document.getElementById('p-select');
+if(pSel) pSel.addEventListener('change',function(){ if(this.value) document.getElementById('p-input').value=this.value; });
+bindClick('p-btn',function(){
+  var v=(document.getElementById('p-input').value||document.getElementById('p-select').value||'').trim();
+  if(!v){ renderResult('p-result',{error:'请选择或输入证型/症状'}); return; }
+  setLoading('p-loading',true);
+  document.getElementById('p-save-row').style.display='none';
+  post('/api/plan',{query:v}).then(function(d){
+    setLoading('p-loading',false);
+    var box=document.getElementById('p-result');
+    if(d.error){
+      renderResult('p-result',{error:d.error});
+      return;
+    }
+    var html='';
+    if(d.matched_patterns&&d.matched_patterns.length){
+      html+='<div class="res-section"><div class="rs-title">匹配证型</div><div class="rs-body"><div class="tag-row">';
+      d.matched_patterns.forEach(function(p){ html+='<span class="tag">'+esc(p)+'</span>'; });
+      html+='</div></div></div>';
+    }
+    if(d.plan){
+      var pl=d.plan;
+      if(pl.analysis) html+='<div class="res-section"><div class="rs-title">辨证分析</div><div class="rs-body">'+esc(pl.analysis)+'</div></div>';
+      if(pl.pattern_name) html+='<div class="res-section"><div class="rs-title">证型</div><div class="rs-body">'+esc(pl.pattern_name)+'</div></div>';
+      if(pl.principle) html+='<div class="res-section"><div class="rs-title">治则</div><div class="rs-body">'+esc(pl.principle)+'</div></div>';
+      if(pl.formula){
+        var f=pl.formula;
+        html+='<div class="res-section"><div class="rs-title">方剂</div><div class="rs-body">'+
+          (f.name?('<b>'+esc(f.name)+'</b><br>'):'')+
+          (f.ingredients?esc(f.ingredients):'')+
+          (f.method?('<br><span style="color:#7c9bc0;font-size:12px">用法：'+esc(f.method)+'</span>'):'')+
+          '</div></div>';
+      }
+      if(pl.diet_therapy&&pl.diet_therapy.length){
+        html+='<div class="res-section"><div class="rs-title">食疗方案</div><div class="rs-body">';
+        pl.diet_therapy.forEach(function(dt){
+          html+='<div style="margin-bottom:8px"><b>'+esc(dt.name||'')+'</b>'+
+            (dt.ingredients?('<br>原料：'+esc(dt.ingredients)):'')+
+            (dt.method?('<br>做法：'+esc(dt.method)):'')+
+            (dt.efficacy?('<br><span style="color:#d4a853">功效：'+esc(dt.efficacy)+'</span>'):'')+'</div>';
+        });
+        html+='</div></div>';
+      }
+      if(pl.acupressure&&pl.acupressure.length){
+        html+='<div class="res-section"><div class="rs-title">穴位按摩</div><div class="rs-body">';
+        pl.acupressure.forEach(function(ac){
+          html+='<div style="margin-bottom:8px"><b>'+esc(ac.name||'')+'</b>'+
+            (ac.location?('<br>定位：'+esc(ac.location)):'')+
+            (ac.method?('<br>按法：'+esc(ac.method)):'')+
+            (ac.duration?(' · '+esc(ac.duration)):'')+'</div>';
+        });
+        html+='</div></div>';
+      }
+      if(pl.lifestyle&&pl.lifestyle.length){
+        html+='<div class="res-section"><div class="rs-title">生活方式</div><div class="rs-body"><ul>';
+        pl.lifestyle.forEach(function(ls){
+          html+='<li>'+(ls.category?('<b>'+esc(ls.category)+'：</b>'):'')+esc(ls.advice||ls)+'</li>';
+        });
+        html+='</ul></div></div>';
+      }
+    }
+    if(!html) html='<div class="res-error">方案生成失败</div>';
+    box.innerHTML=html;
+    document.getElementById('p-save-row').style.display='block';
+  }).catch(function(e){
+    setLoading('p-loading',false);
+    renderResult('p-result',{error:'请求失败：'+e.message});
+  });
+});
+bindClick('p-clear',function(){
+  document.getElementById('p-input').value='';
+  document.getElementById('p-select').value='';
+  document.getElementById('p-result').innerHTML='';
+  document.getElementById('p-save-row').style.display='none';
+  document.getElementById('p-save-msg').textContent='';
+});
+document.querySelectorAll('#tab-query .example-tag').forEach(function(t){
+  t.addEventListener('click',function(){ document.getElementById('q-input').value=this.textContent; });
+});
+document.querySelectorAll('#tab-consult .example-tag').forEach(function(t){
+  t.addEventListener('click',function(){
+    var target=document.getElementById('q');
+    if(!target) return;
+    target.value=this.textContent;
+    switchTab('tab-consult');
+    var card=document.querySelector('.mode-card[data-mode="sizhen"]');
+    if(card) card.click();
+  });
+});
+document.querySelectorAll('#mode-text .example-tag').forEach(function(t){
+  t.addEventListener('click',function(){ document.getElementById('c-input').value=this.textContent; });
+});
+
+/* ── 古籍检索 Tab ── */
+bindClick('q-btn',function(){
+  var q=document.getElementById('q-input').value.trim();
+  if(!q){ renderResult('q-result',{error:'请输入症状描述'}); return; }
+  submit('/api/query',{query:q,top_k:5},'q-loading','q-result');
+});
+bindClick('q-clear',function(){ document.getElementById('q-input').value=''; renderResult('q-result',{}); });
+
+/* ── 健康档案 Tab ── */
+var PF_COND_CHIPS=['失眠','便秘','疲劳','怕冷','口干','胸闷','头晕','多梦','腹胀','食欲不振','腰膝酸软','易出汗','急躁易怒','皮肤过敏'];
+var pfCurUser='';
+function pfUser(){
+  var sel=document.getElementById('pf-user-select');
+  if(sel && sel.value) return sel.value;
+  return document.getElementById('pf-name').value.trim();
+}
+function pfGetSelChips(){
+  var arr=[];
+  document.querySelectorAll('#pf-cond-chips .chip.on').forEach(function(c){ arr.push(c.getAttribute('data-s')); });
+  return arr;
+}
+function pfGetConditions(){
+  var arr=pfGetSelChips();
+  var c=document.getElementById('pf-cond-custom').value.trim();
+  if(c){
+    c.split(/[、，,\s]+/).forEach(function(s){ s=s.trim(); if(s && arr.indexOf(s)<0) arr.push(s); });
+  }
+  return arr;
+}
+function pfShowStatus(msg,color){
+  var el=document.getElementById('pf-status');
+  if(el){ el.textContent=msg; el.style.color=color||'#b0c8d8'; }
+}
+function pfRenderPlan(data){
+  var box=document.getElementById('pf-plan');
+  if(!box) return;
+  box.innerHTML='';
+  if(!data || data.error){ box.innerHTML='<div class="res-error">'+(data&&data.error?esc(data.error):'生成失败')+'</div>'; return; }
+  var h='';
+  h+='<div class="plan-box" style="margin-top:14px"><h4>☯ 健康计划 · '+esc(data.constitution||'')+'</h4></div>';
+  if(data.schedule){
+    h+='<div class="plan-box"><h4>⏰ 作息建议</h4><table class="sched-table">';
+    var s=data.schedule;
+    if(s['起床']) h+='<tr><td>起床</td><td>'+esc(s['起床'])+'</td></tr>';
+    if(s['入睡']) h+='<tr><td>入睡</td><td>'+esc(s['入睡'])+'</td></tr>';
+    if(s['午休']) h+='<tr><td>午休</td><td>'+esc(s['午休'])+'</td></tr>';
+    Object.keys(s).forEach(function(k){
+      if(k!=='起床'&&k!=='入睡'&&k!=='午休') h+='<tr><td>'+esc(k)+'</td><td>'+esc(s[k])+'</td></tr>';
+    });
+    h+='</table></div>';
+  }
+  if(data.diet && data.diet.length) h+='<div class="plan-box"><h4>🍲 饮食建议</h4><ul>'+data.diet.map(function(x){ return '<li>'+esc(x)+'</li>'; }).join('')+'</ul></div>';
+  if(data.exercise && data.exercise.length) h+='<div class="plan-box"><h4>🏃 运动建议</h4><ul>'+data.exercise.map(function(x){ return '<li>'+esc(x)+'</li>'; }).join('')+'</ul></div>';
+  if(data.tcm_advice && data.tcm_advice.length) h+='<div class="plan-box"><h4>🌿 中医调理</h4><ul>'+data.tcm_advice.map(function(x){ return '<li>'+esc(x)+'</li>'; }).join('')+'</ul></div>';
+  if(data.special && data.special.length) h+='<div class="plan-box"><h4>⚠️ 特别提醒</h4><ul>'+data.special.map(function(x){ return '<li>'+esc(x)+'</li>'; }).join('')+'</ul></div>';
+  box.innerHTML=h;
+}
+function pfRenderHistory(data){
+  var box=document.getElementById('pf-history');
+  if(!box) return;
+  box.innerHTML='';
+  var list=(data&&data.history)||[];
+  if(data && data.error){ box.innerHTML='<div class="res-error">'+esc(data.error)+'</div>'; return; }
+  if(!list.length){ box.innerHTML='<div class="hist-empty">暂无问诊记录。使用 AI辨证 / 体质辨识 / 化验分析 并保存后，记录将显示在这里。</div>'; return; }
+  var h='';
+  list.forEach(function(item){
+    var ts=item.ts||'';
+    var when='';
+    if(ts){
+      try{
+        var d=new Date(ts);
+        when=d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2)+' '+('0'+d.getHours()).slice(-2)+':'+('0'+d.getMinutes()).slice(-2);
+      }catch(e){ when=ts; }
+    }
+    var q=item.query||item.question||'';
+    var r=item.result||item.ai||item.ai_diagnosis||'';
+    if(item.rule_patterns && item.rule_patterns.length) r=r+(r?'\n':'')+'证型倾向：'+item.rule_patterns.join('、');
+    h+='<div class="hist-item"><div class="h-time">'+(when||'时间未知')+'</div>';
+    if(q) h+='<div class="h-q">💬 '+esc(q)+'</div>';
+    if(r) h+='<div class="h-r">'+esc(r).replace(/\n/g,'<br>')+'</div>';
+    h+='</div>';
+  });
+  box.innerHTML=h;
+}
+function pfLoadProfile(){
+  var uid=pfUser();
+  if(!uid){ pfShowStatus('请先选择或填写档案名称','#ff8f80'); return; }
+  fetch('/api/profile?user_id='+encodeURIComponent(uid)).then(function(r){ return r.json(); }).then(function(data){
+    if(data.error){ pfShowStatus('档案不存在：'+data.error,'#ff8f80'); return; }
+    pfCurUser=uid;
+    var p=data.profile||{};
+    document.getElementById('pf-name').value=p.name||uid;
+    document.getElementById('pf-age').value=(p.age!==undefined&&p.age!==null)?p.age:'';
+    document.getElementById('pf-gender').value=p.gender||'';
+    pfShowStatus('已载入档案：'+uid+'（历史 '+data.history_count+' 条）');
+    pfRenderHistory(data);
+  }).catch(function(e){ pfShowStatus('载入失败：'+e.message,'#ff8f80'); });
+}
+function pfCreateProfile(){
+  var name=document.getElementById('pf-name').value.trim();
+  var uid=document.getElementById('pf-user-select').value;
+  if(!uid) uid=name;
+  if(!uid){ pfShowStatus('请填写档案名称','#ff8f80'); return; }
+  var profile={name:name||uid};
+  var age=document.getElementById('pf-age').value.trim();
+  if(age) profile.age=parseInt(age,10)||age;
+  var g=document.getElementById('pf-gender').value;
+  if(g) profile.gender=g;
+  post('/api/profile',{user_id:uid,profile:profile}).then(function(data){
+    if(data.error){ pfShowStatus('创建失败：'+data.error,'#ff8f80'); return; }
+    pfCurUser=uid;
+    var sel=document.getElementById('pf-user-select');
+    if(sel){
+      var found=false;
+      for(var i=0;i<sel.options.length;i++){ if(sel.options[i].value===uid){ found=true; break; } }
+      if(!found){ var o=document.createElement('option'); o.value=uid; o.textContent=name||uid; sel.appendChild(o); }
+      sel.value=uid;
+    }
+    pfShowStatus('已创建档案：'+uid);
+  }).catch(function(e){ pfShowStatus('创建失败：'+e.message,'#ff8f80'); });
+}
+function pfSaveProfile(){
+  var uid=pfUser();
+  if(!uid){ pfShowStatus('请先选择档案或填写名称','#ff8f80'); return; }
+  var profile={};
+  var name=document.getElementById('pf-name').value.trim();
+  if(name) profile.name=name;
+  var age=document.getElementById('pf-age').value.trim();
+  if(age) profile.age=parseInt(age,10)||age;
+  var g=document.getElementById('pf-gender').value;
+  if(g) profile.gender=g;
+  if(!Object.keys(profile).length){ pfShowStatus('没有可保存的内容','#ff8f80'); return; }
+  post('/api/profile',{user_id:uid,profile:profile}).then(function(data){
+    if(data.created){ pfCurUser=uid; pfShowStatus('已创建并保存档案：'+uid); }
+    else if(data.error){ pfShowStatus('保存失败：'+data.error,'#ff8f80'); }
+    else{ pfCurUser=uid; pfShowStatus('已更新档案：'+uid); }
+  }).catch(function(e){ pfShowStatus('保存失败：'+e.message,'#ff8f80'); });
+}
+/* ✨ 自动生成档案：从最近一次辨证结果自动填入 */
+bindClick('pf-autofill-btn',function(){
+  var msg=document.getElementById('pf-status');
+  if(!lastDiag.mode){
+    if(msg){ msg.textContent='暂无辨证结果，请先在「AI辨证」完成一次辨证'; msg.style.color='#ff8f80'; }
+    return;
+  }
+  var uid=pfUser()||pfCurUser;
+  if(uid){ /* 已有档案，同步到档案历史 */ }
+  /* 1. 体质自动填入 */
+  var consSel=document.getElementById('pf-constitution');
+  if(consSel && lastDiag.constitution){
+    var matched=false;
+    for(var i=0;i<consSel.options.length;i++){
+      if(consSel.options[i].value===lastDiag.constitution){ consSel.value=lastDiag.constitution; matched=true; break; }
+    }
+  }
+  /* 2. 症状 chips + 自定义输入自动填入 */
+  var text=(lastDiag.query||'')+' '+(lastDiag.text||'');
+  var conds=pfGetConditions();
+  var custom=document.getElementById('pf-cond-custom');
+  var customStr=custom?custom.value.trim():'';
+  var PF_ALL=['失眠','便秘','疲劳','怕冷','口干','胸闷','头晕','多梦','腹胀','食欲不振','腰膝酸软','易出汗','急躁易怒','皮肤过敏'];
+  PF_ALL.forEach(function(cn){
+    if(text.indexOf(cn)>=0 && conds.indexOf(cn)<0){
+      var chip=document.querySelector('#pf-cond-chips .chip[data-s="'+cn+'"]');
+      if(chip) chip.classList.add('on');
+      conds.push(cn);
+    }
+  });
+  if(lastDiag.pattern && customStr.indexOf(lastDiag.pattern)<0 && conds.indexOf(lastDiag.pattern)<0){
+    customStr=customStr?(customStr+'、'+lastDiag.pattern):lastDiag.pattern;
+  }
+  if(custom) custom.value=customStr;
+  /* 3. 存入档案历史（档案存在时） */
+  if(uid){
+    var entry={user_id:uid,query:lastDiag.query||'',result:lastDiag.text||''};
+    if(lastDiag.pattern) entry.pattern=lastDiag.pattern;
+    if(lastDiag.constitution) entry.constitution=lastDiag.constitution;
+    post('/api/profile/history',entry).then(function(d){});
+  }
+  if(msg){
+    msg.textContent='✅ 已自动生成档案内容'+(lastDiag.pattern?('（'+lastDiag.pattern+'）'):'')+(lastDiag.constitution?(' · '+lastDiag.constitution):'')+'，可点击「生成健康计划」';
+    msg.style.color='#7fd08a';
+  }
+});
+bindClick('pf-load-btn',pfLoadProfile);
+bindClick('pf-create-btn',pfCreateProfile);
+bindClick('pf-save-btn',pfSaveProfile);
+bindClick('pf-gen-btn',function(){
+  var cons=document.getElementById('pf-constitution').value;
+  var conds=pfGetConditions();
+  var uid=pfUser()||pfCurUser;
+  var profile={};
+  if(uid){
+    var age=document.getElementById('pf-age').value.trim();
+    var g=document.getElementById('pf-gender').value;
+    if(age) profile.age=parseInt(age,10)||age;
+    if(g) profile.gender=g;
+  }
+  var payload={constitution:cons,conditions:conds};
+  if(profile.age!==undefined) payload.age=profile.age;
+  if(profile.gender) payload.gender=profile.gender;
+  setLoading('pf-gen-loading',true);
+  post('/api/plan/generate',payload).then(function(data){
+    pfRenderPlan(data);
+    if(!data.error && uid){
+      post('/api/profile/history',{user_id:uid,query:conds.join('、')||cons,result:JSON.stringify(data)}).then(function(){});
+    }
+  }).catch(function(e){
+    pfRenderPlan({error:'请求失败：'+e.message});
+  }).finally(function(){ setLoading('pf-gen-loading',false); });
+});
+bindClick('pf-cond-clear',function(){
+  document.querySelectorAll('#pf-cond-chips .chip').forEach(function(c){ c.classList.remove('on'); });
+  document.getElementById('pf-cond-custom').value='';
+  document.getElementById('pf-plan').innerHTML='';
+});
+bindClick('pf-history-btn',function(){
+  var uid=pfUser()||pfCurUser;
+  if(!uid){ document.getElementById('pf-history').innerHTML='<div class="hist-empty">请先选择或创建档案</div>'; return; }
+  fetch('/api/profile/history?user_id='+encodeURIComponent(uid)).then(function(r){ return r.json(); }).then(function(data){
+    pfRenderHistory(data);
+  }).catch(function(e){
+    document.getElementById('pf-history').innerHTML='<div class="res-error">'+esc(e.message)+'</div>';
+  });
+});
+/* 📈 健康趋势 */
+bindClick('pf-trend-btn',function(){
+  var uid=pfUser()||pfCurUser;
+  var box=document.getElementById('pf-history');
+  if(!uid){ if(box) box.innerHTML='<div class="hist-empty">请先选择或创建档案</div>'; return; }
+  if(box) box.innerHTML='<div class="loading" style="display:block"><span class="spinner"></span>统计健康趋势……</div>';
+  fetch('/api/health/trend?user_id='+encodeURIComponent(uid)+'&days=30').then(function(r){ return r.json(); }).then(function(d){
+    if(!box) return;
+    if(d.error){ box.innerHTML='<div class="res-error">'+esc(d.error)+'</div>'; return; }
+    var h='';
+    if(d.top_patterns&&d.top_patterns.length){
+      h+='<div class="res-section"><div class="rs-title">近 30 天高频证型</div><div class="rs-body">';
+      d.top_patterns.forEach(function(p){
+        h+='<div style="margin-bottom:4px">'+(Array.isArray(p)?('<b>'+esc(p[0])+'</b> × '+esc(p[1])):esc(p))+'</div>';
+      });
+      h+='</div></div>';
+    }
+    if(d.checkin_rate!==undefined||d.rate!==undefined){
+      var rate=(d.checkin_rate!==undefined)?d.checkin_rate:d.rate;
+      h+='<div class="res-section"><div class="rs-title">执行率</div><div class="rs-body">'+esc(rate)+'%</div></div>';
+    }
+    if(d.score!==undefined){
+      h+='<div class="res-section"><div class="rs-title">健康评分</div><div class="rs-body">'+esc(d.score)+'</div></div>';
+    }
+    if(!h) h='<div class="hist-empty">暂无足够数据，继续使用后可查看趋势</div>';
+    box.innerHTML=h;
+  }).catch(function(e){
+    if(box) box.innerHTML='<div class="res-error">'+esc(e.message)+'</div>';
+  });
+});
+/* ✅ 打卡 */
+bindClick('pf-checkin-btn',function(){
+  var uid=pfUser()||pfCurUser;
+  var box=document.getElementById('pf-checkin-result');
+  if(!uid){ if(box) box.textContent='请先选择或创建档案'; return; }
+  var item=document.getElementById('pf-checkin-item').value;
+  post('/api/checkin',{user_id:uid,item:item,done:1}).then(function(d){
+    if(box){
+      if(d.error) box.textContent='❌ '+d.error;
+      else box.textContent='✅ 已打卡：'+item+'（'+d.date+'）';
+    }
+  }).catch(function(e){ if(box) box.textContent='❌ 打卡失败：'+e.message; });
+});
+bindClick('pf-week-btn',function(){
+  var uid=pfUser()||pfCurUser;
+  var box=document.getElementById('pf-checkin-result');
+  if(!uid){ if(box) box.textContent='请先选择或创建档案'; return; }
+  fetch('/api/checkin/week?user_id='+encodeURIComponent(uid)+'&days=7').then(function(r){ return r.json(); }).then(function(d){
+    if(box){
+      if(d.error) box.textContent='❌ '+d.error;
+      else box.textContent='📊 近7天执行率：'+d.rate+'%（'+d.done_items+'/'+d.total_items+' 项）';
+    }
+  }).catch(function(e){ if(box) box.textContent='❌ 查询失败：'+e.message; });
+});
+document.querySelectorAll('#pf-cond-chips .chip').forEach(function(c){
+  c.addEventListener('click',function(){ c.classList.toggle('on'); });
+});
+</script>
+</body>
+</html>
