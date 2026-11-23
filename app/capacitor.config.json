@@ -1,0 +1,10 @@
+{
+  "appId": "uk.yanyusk.sishi",
+  "appName": "四时辨证",
+  "webDir": "web",
+  "android": {
+    "allowMixedContent": false,
+    "webContentsDebuggingEnabled": false
+  },
+  "server": { "androidScheme": "https" }
+}

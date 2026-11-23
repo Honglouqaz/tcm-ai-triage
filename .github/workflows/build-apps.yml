@@ -1,0 +1,132 @@
+name: Build Apps (Android / Windows / Linux)
+
+# 三平台产物全部在云端构建：本机不需要 Android SDK / JDK / Wine，产物可复现。
+# push 到 main 或手动触发 → 构建并上传 artifact；打 v* 标签 → 自动建 Release 并附上三个安装包。
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  workflow_dispatch:
+
+env:
+  NODE_VERSION: '20'
+
+jobs:
+  linux:
+    name: Linux (AppImage + deb)
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '20' }
+      - name: Install deps
+        working-directory: app
+        run: npm install --no-audit --no-fund
+      - name: Engine self-test
+        working-directory: app
+        run: npm run test:engine
+      - name: Build
+        working-directory: app
+        run: npx electron-builder --linux AppImage deb --publish never
+        env: { GH_TOKEN: '' }
+      - name: List output
+        working-directory: app
+        run: ls -la dist/
+      - uses: actions/upload-artifact@v4
+        with:
+          name: linux-appimage-deb
+          path: |
+            app/dist/*.AppImage
+            app/dist/*.deb
+          if-no-files-found: error
+
+  windows:
+    name: Windows (exe)
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '20' }
+      - name: Install deps
+        working-directory: app
+        run: npm install --no-audit --no-fund
+      - name: Build
+        working-directory: app
+        run: npx electron-builder --win nsis portable --publish never
+      - name: List output
+        working-directory: app
+        run: dir dist
+      - uses: actions/upload-artifact@v4
+        with:
+          name: windows-exe
+          path: |
+            app/dist/*.exe
+          if-no-files-found: error
+
+  android:
+    name: Android (apk)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '20' }
+      - uses: actions/setup-java@v4
+        with: { distribution: 'temurin', java-version: '21' }
+      - uses: android-actions/setup-android@v3
+      - name: Install deps
+        working-directory: app
+        run: npm install --no-audit --no-fund
+      - name: Prepare web assets
+        working-directory: app
+        run: npm run prepare:web
+      - name: Add / sync Android platform
+        working-directory: app
+        run: |
+          if [ ! -d android ]; then npx cap add android; else npx cap sync android; fi
+      - name: Build debug APK
+        working-directory: app/android
+        run: |
+          chmod +x gradlew
+          ./gradlew assembleDebug --no-daemon
+      - uses: actions/upload-artifact@v4
+        with:
+          name: android-apk
+          path: app/android/app/build/outputs/apk/debug/*.apk
+          if-no-files-found: error
+
+  release:
+    name: Publish Release
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: [linux, windows, android]
+    runs-on: ubuntu-latest
+    permissions: { contents: write }
+    steps:
+      - uses: actions/download-artifact@v4
+        with: { path: artifacts }
+      - name: Show files
+        run: find artifacts -type f | sort
+      - uses: softprops/action-gh-release@v2
+        with:
+          name: 四时辨证 ${{ github.ref_name }}
+          draft: false
+          generate_release_notes: true
+          body: |
+            ## 四时辨证 ${{ github.ref_name }} — 离线中医辨证规则引擎
+
+            **推理全在本地完成，不联网、不调用大模型。** 装好即用，每条结论可追溯到具体条目与权重。
+
+            | 平台 | 文件 | 说明 |
+            |---|---|---|
+            | Android | `app-debug.apk` | 直接安装（debug 签名，测试用）|
+            | Windows | `四时辨证 Setup *.exe` / `portable*.exe` | 安装版 / 免安装版 |
+            | Linux | `*.AppImage` / `*.deb` | `chmod +x *.AppImage` 双击运行 |
+
+            规则库：9 体质 · 47 证型 · 76 症状 · 73 首方剂 · 23 项化验指标。
+
+            > ⚠️ 本工具为中医知识整理与参考，**不是医疗器械，不提供医疗建议**；方剂与用药必须由执业中医师面诊后决定。
+          files: |
+            artifacts/**/*.apk
+            artifacts/**/*.exe
+            artifacts/**/*.AppImage
+            artifacts/**/*.deb

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>四时辨证 · 中医规则引擎</title>
+<meta name="description" content="离线中医辨证工具：9 体质 / 47 证型 / 76 症状 / 73 首方剂 / 23 项化验指标，规则全可读，不做黑箱。">
+<meta name="theme-color" content="#1c1a17">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">
+    <span class="seal">四时</span>
+    <span class="title">辨证</span>
+  </div>
+  <div class="stats" id="engine-stats">加载中…</div>
+</header>
+
+<nav class="tabs" id="tabs">
+  <button class="tab active" data-tab="diagnose">辨证</button>
+  <button class="tab" data-tab="constitution">体质</button>
+  <button class="tab" data-tab="lab">化验</button>
+  <button class="tab" data-tab="about">说明</button>
+</nav>
+
+<main>
+  <!-- 辨证 -->
+  <section class="panel active" id="panel-diagnose">
+    <div class="card">
+      <label class="lbl">症状（可分多行，用逗号或换行分隔；支持口语，如“晚上睡不好”）</label>
+      <textarea id="in-symptoms" rows="4" placeholder="例如：急躁易怒、口苦、失眠、头晕"></textarea>
+      <div class="quick" id="quick-symptoms"></div>
+      <div class="row2">
+        <div>
+          <label class="lbl">舌象（可选）</label>
+          <input id="in-tongue" placeholder="如：舌红苔黄">
+        </div>
+        <div>
+          <label class="lbl">脉象（可选）</label>
+          <input id="in-pulse" placeholder="如：弦数">
+        </div>
+      </div>
+      <button class="primary" id="btn-diagnose">开始辨证</button>
+    </div>
+    <div id="out-diagnose"></div>
+  </section>
+
+  <!-- 体质 -->
+  <section class="panel" id="panel-constitution">
+    <div class="card">
+      <label class="lbl">勾选符合你的表现（也可自行输入，支持口语）</label>
+      <input id="in-signs" placeholder="输入表现，如：怕冷 手脚冰凉">
+      <div class="chips-scroll" id="sign-list"></div>
+      <div class="selected-box" id="signs-selected" hidden></div>
+      <button class="primary" id="btn-constitution">辨识体质</button>
+    </div>
+    <div id="out-constitution"></div>
+  </section>
+
+  <!-- 化验 -->
+  <section class="panel" id="panel-lab">
+    <div class="card">
+      <label class="lbl">选择指标并填数值（只做参考区间与中医视角提示，不做西医诊断）</label>
+      <div class="lab-rows" id="lab-rows"></div>
+      <button class="weak" id="btn-lab-add">+ 再加一项</button>
+      <button class="primary" id="btn-lab">解读</button>
+    </div>
+    <div id="out-lab"></div>
+  </section>
+
+  <!-- 说明 -->
+  <section class="panel" id="panel-about">
+    <div class="card">
+      <h2>这个应用是什么</h2>
+      <p>把中医的「四诊 → 辨证 → 调理」做成一套<strong>可跑、可读、可改</strong>的规则系统。推理全部在本地完成，<strong>不联网、不调用大模型</strong>，所以结果可复现、每一条结论都能追溯到具体条目与权重。</p>
+      <h2>权重口径（可被追问）</h2>
+      <ul>
+        <li>证型「典型症状」列表的前 40%（至少 2 条）记为主症，权重 <code>1.0</code>；其余为次症 <code>0.6</code></li>
+        <li>舌象命中 <code>+0.8</code>、脉象命中 <code>+0.8</code></li>
+        <li>归一分 = 实际得分 ÷ 该证型上限 × 100</li>
+        <li>体质按「表现命中数」排序，<strong>不是</strong>标准量表加权</li>
+      </ul>
+      <h2>边界（务必读）</h2>
+      <p class="warn">本工具是中医知识整理与参考，<strong>不是医疗器械，不提供医疗建议</strong>。方剂与用药必须由执业中医师面诊后决定。化验指标只做区间提示与关联方向，<strong>不做西医诊断</strong>。</p>
+      <h2>开源</h2>
+      <p>规则数据在 <code>rules/*.json</code>，换你手上的教材口径不用改代码。项目：<a href="https://github.com/Honglouqaz/tcm-ai-triage" target="_blank" rel="noopener">Honglouqaz/tcm-ai-triage</a>（MIT）</p>
+      <p class="ver" id="app-ver"></p>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <span>四时辨证 · 本地规则引擎 v1.0 · 离线可用</span>
+</footer>
+
+<script src="engine/tcm-engine.js"></script>
+<script src="engine/rules-bundle.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

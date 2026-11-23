@@ -8,3 +8,15 @@ __pycache__/
 kv_data/
 dist/
 .DS_Store
+
+# ===== app/ (Electron + Capacitor) =====
+app/android/.gradle/
+app/android/build/
+app/android/app/build/
+app/android/local.properties
+app/android/.idea/
+app/android/app/src/main/assets/public/
+# 构建产物：由 app/build-prepare.cjs 从 app/engine/ 复制生成，不入库
+app/web/engine/
+# electron-builder 缓存
+app/dist/

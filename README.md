@@ -10,7 +10,7 @@
 
 | 模块 | 规模（真实计数） | 说明 |
 |---|---|---|
-| 体质辨识 | **9 种体质** | 九种体质框架，问卷加权打分 + 兼夹体质判定 |
+| 体质辨识 | **9 种体质** | 九种体质框架；按「表现命中数」排序，可同时看兼夹（前三名）|
 | 证型匹配 | **47 个证型** | 症状命中→证型得分，支持主症/次症/舌脉分层权重 |
 | 症状词表 | **76 个症状** | 含同义词归一（"睡不好/入睡难/失眠"归一到同一节点） |
 | 中药 | **54 味** | 性味归经、功效、常用量、配伍禁忌提示 |
@@ -49,6 +49,8 @@ cd tcm-ai-triage
 # 1) 纯前端试用（不需要任何后端）
 python3 -m http.server 8080 -d src/web
 # 打开 http://localhost:8080
+# 2) 应用版（Android/Windows/Linux，离线跑）
+cd app && npm install && npm run prepare:web && npm start
 ```
 
 Worker 部署（可选）：
@@ -60,6 +62,45 @@ wrangler deploy
 # 可选：接一家 OpenAI 兼容的模型
 wrangler secret put TCM_LLM_API_KEY
 ```
+
+## 三平台应用（Android / Windows / Linux）
+
+`app/` 目录是同一套规则引擎的**离线应用版**：Electron 打包 Windows / Linux，Capacitor 打包 Android，
+外加可「添加到主屏幕」的 PWA。三个平台**共用同一份 `app/web/` 资源**，不存在多套代码漂移。
+
+**装好即用，全程不联网、不调用大模型** —— 输入勾选/口语症状，推理在本地完成，结果确定且可复现。
+
+| 平台 | 产物 | 怎么装 |
+|---|---|---|
+| Android | `app-debug.apk` | 手机直接安装（debug 签名，自用/测试）|
+| Windows | `*.exe`（NSIS 安装版 / portable 免安装版）| 双击 |
+| Linux | `*.AppImage` / `*.deb` | `chmod +x *.AppImage && ./*.AppImage` |
+| PWA | `app/web/` 任意静态托管 | 浏览器「添加到主屏幕」|
+
+产物由 GitHub Actions 在三平台 runner 上云端构建（`.github/workflows/build-apps.yml`），
+本机不需要 Android SDK / JDK / Wine；打 `v*` 标签会自动建 Release 并附上三个安装包。
+
+### 本地开发 / 自己打包
+
+```bash
+cd app
+npm install
+npm run test:engine      # 引擎 21 项断言（规则装载/同义词/辨证/体质/化验/方剂）
+npm start                # 起桌面应用（Electron）
+npm run dist:linux       # 出 AppImage + deb
+npm run dist:win         # 出 exe（需在 Windows 上跑）
+npx cap add android && npx cap sync android   # 生成/同步安卓工程，再用 Android Studio 或 gradlew 打包
+```
+
+### 本地推理的权重口径（写在代码里，可改）
+
+- 证型「典型症状」列表的前 **40%**（至少 2 条）记为主症，权重 `1.0`；其余记次症 `0.6`
+- 舌象命中 `+0.8`，脉象命中 `+0.8`
+- 归一分 = 实际得分 ÷ 该证型上限 × 100（所以是「相对适配度」，不是概率）
+- 体质按「表现命中数」排序，**不是**标准量表加权
+
+⚠️ 这是可解释的启发式权重，不是某本教材的原始量表。换成你自己的权重表只需改
+`app/engine/tcm-engine.js` 里的 `WEIGHTS` 常量 —— 改完全局生效，UI 不用动。
 
 ## 为什么开源
 

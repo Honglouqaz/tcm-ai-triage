@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">四时辨证</string>
+    <string name="title_activity_main">四时辨证</string>
+    <string name="package_name">uk.yanyusk.sishi</string>
+    <string name="custom_url_scheme">uk.yanyusk.sishi</string>
+</resources>
