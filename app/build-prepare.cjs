@@ -16,7 +16,7 @@ fs.readdirSync(path.join(app, 'engine', 'rules')).forEach(f => {
 cp.execFileSync('node', [path.join(app, 'engine', 'bundle-rules.cjs')], { stdio: 'inherit' });
 fs.copyFileSync(path.join(app, 'engine', 'rules-bundle.js'), path.join(dst, 'rules-bundle.js'));
 const must = ['index.html', 'app.js', 'style.css', 'sw.js', 'manifest.webmanifest', 'icon-192.png', 'icon-512.png',
-                'family.js', 'family-ui.js',
+                'family.js', 'family-ui.js', 'settings.js',
               'engine/tcm-engine.js', 'engine/rules-bundle.js'];
 const missing = must.filter(f => !fs.existsSync(path.join(web, f)));
 console.log(missing.length ? '❌ 缺失: ' + missing.join(', ') : '✅ web 资源齐备 (' + must.length + ' 项)');

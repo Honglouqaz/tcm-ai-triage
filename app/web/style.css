@@ -58,7 +58,7 @@ code{background:#f0e9da;padding:1px 6px;border-radius:5px;font-size:13px;font-fa
 .warn{background:#fdf2ef;border:1px solid #f3d8d2;border-radius:10px;padding:10px 12px;color:#8c2f28}
 .lab-rows .labrow{display:grid;grid-template-columns:1.6fr .8fr;gap:8px;margin-bottom:8px}
 .ver{font-size:12px;color:#9a917f;margin-top:18px}
-.foot{position:fixed;bottom:0;left:0;right:0;text-align:center;font-size:11.5px;color:#9a917f;
+.foot{position:fixed;bottom:0;left:0;right:0;text-align:center;font-size:12px;color:#6b6255;
   padding:8px 0 calc(env(safe-area-inset-bottom) + 8px);background:rgba(247,243,234,.95);border-top:1px solid var(--line)}
 .empty{text-align:center;color:#9a917f;font-size:14px;padding:24px 0}
 
@@ -89,7 +89,7 @@ code{background:#f0e9da;padding:1px 6px;border-radius:5px;font-size:13px;font-fa
   overflow:hidden;text-overflow:ellipsis}
 .fam-meta{font-size:12.5px;color:#a49c8d;margin-top:3px}
 .fam-card-btns{display:flex;gap:6px;flex:0 0 auto}
-.fam-empty{text-align:center;color:#7a7367;font-size:13.5px;padding:38px 18px;line-height:2}
+.fam-empty{text-align:center;color:#5a5348;font-size:13.5px;padding:38px 18px;line-height:2}
 .fam-detail{margin-top:16px}
 .fam-detail-head{background:#2b2620 !important;border-color:#4a3d2c !important}
 .fam-det-name{font-size:17.5px;font-weight:700;color:#fbf7ef;display:flex;
@@ -133,3 +133,33 @@ code{background:#f0e9da;padding:1px 6px;border-radius:5px;font-size:13px;font-fa
   .fam-card{flex-wrap:wrap}
   .fam-card-btns{width:100%;justify-content:flex-end}
 }
+
+
+/* ── 模型配置页（BYOK）──────────────────────────────────── */
+.set-head{padding:4px 2px 14px}
+.set-title{font-size:19px;font-weight:700;color:#2b2118;letter-spacing:.5px}
+.set-sub{font-size:12.5px;color:#8a7f6d;margin-top:5px}
+.set-card{background:#211d19;border:1px solid #322c25;border-radius:11px;padding:15px;margin-bottom:11px}
+.set-label{display:block;font-size:13px;color:#b8ae9b;margin-bottom:11px;font-weight:500}
+.set-providers{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+.set-prov{background:#2a2622;color:#cfc7b8;border:1px solid #3a3229;border-radius:8px;
+  padding:10px 13px;font-size:13px;font-family:inherit;cursor:pointer;min-height:42px}
+.set-prov.on{background:#8a5a2b;color:#fff;border-color:#a67338;font-weight:600}
+.set-hint{font-size:12.5px;color:#a49c8d;line-height:1.75}
+.set-quick{margin-bottom:12px;font-size:12.5px;color:#a49c8d}
+.set-chip{background:#302a23;color:#ddd4c2;border:none;border-radius:6px;
+  padding:6px 11px;font-size:12.5px;font-family:inherit;cursor:pointer;margin:4px 5px 0 0}
+.set-card input{display:block;width:100%;margin-top:7px;background:#191613;
+  border:1px solid #322c25;border-radius:8px;color:#f0e9dc;padding:11px 12px;
+  font-size:14px;font-family:inherit;min-height:44px}
+.set-card input:focus{outline:none;border-color:#8a5a2b}
+.set-btns{display:flex;flex-wrap:wrap;gap:9px;margin:14px 0}
+.set-ok{background:#1f3a26;color:#9fd8ac;padding:13px 15px;border-radius:9px;
+  font-size:13.5px;line-height:1.7;margin-top:10px}
+.set-err{background:#43241f;color:#f0a596;padding:13px 15px;border-radius:9px;
+  font-size:13.5px;line-height:1.7;margin-top:10px}
+.set-wait{background:#2a2622;color:#ddd4c2;padding:13px 15px;border-radius:9px;
+  font-size:13.5px;margin-top:10px}
+.set-detail{font-size:12px;color:#e8bfb2;margin-top:7px;opacity:.85;
+  line-height:1.6;word-break:break-all}
+.set-note{background:#1c1a17;border-color:#2b2620}

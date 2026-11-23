@@ -1,0 +1,56 @@
+{
+  "total_books": 8,
+  "total_records": 763,
+  "total_chars": 734243,
+  "books": {
+    "bencaogangmu": {
+      "file": "bencaogangmu.json",
+      "count": 265,
+      "chars": 262462,
+      "size_kb": 776
+    },
+    "huangdisuwen": {
+      "file": "huangdisuwen.json",
+      "count": 128,
+      "chars": 124409,
+      "size_kb": 374
+    },
+    "huangdilingshu": {
+      "file": "huangdilingshu.json",
+      "count": 102,
+      "chars": 93819,
+      "size_kb": 289
+    },
+    "shanghanzabinglun512": {
+      "file": "shanghanzabinglun512.json",
+      "count": 91,
+      "chars": 88372,
+      "size_kb": 274
+    },
+    "jinkuiyaolvexindian": {
+      "file": "jinkuiyaolvexindian.json",
+      "count": 86,
+      "chars": 82284,
+      "size_kb": 249
+    },
+    "shanghanlun": {
+      "file": "shanghanlun.json",
+      "count": 48,
+      "chars": 42344,
+      "size_kb": 128
+    },
+    "jinkuiyaolvfanglun": {
+      "file": "jinkuiyaolvfanglun.json",
+      "count": 41,
+      "chars": 39348,
+      "size_kb": 118
+    },
+    "jinkuiyaolue": {
+      "file": "jinkuiyaolue.json",
+      "count": 2,
+      "chars": 1205,
+      "size_kb": 4
+    }
+  },
+  "license": "古籍原文属公有领域(Public Domain)，可自由分发"
+}

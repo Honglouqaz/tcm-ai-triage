@@ -115,6 +115,34 @@ npx cap add android && npx cap sync android   # 生成/同步安卓工程，再�
 所有数据只存在你自己设备的 IndexedDB 里，不经过任何服务器；随时可导出成
 JSON + 纯文本，不依赖本应用也能打开。
 
+### 知识库全部公开
+
+| 内容 | 位置 | 规模 |
+|---|---|---|
+| 证型 / 方剂 / 中药 / 症状 / 体质 / 化验指标 | `rules/*.json` | 163KB |
+| 古籍全文（本草纲目、黄帝内经、伤寒论、金匮要略） | `rules/classics/*.json` | 73 万字 |
+
+古籍原文属公有领域，可自由分发。嫌占地方？可以只留 `rules/`，古籍按需从
+KV 或干脆不要——辨证本身不依赖古籍全文。
+
+### 用自己的模型
+
+网页和桌面端都能填自己的接口：DeepSeek / 通义 / Moonshot / 硅基流动，或者
+本地跑的 Ollama / LM Studio。配置只存本机，选「只用规则引擎」则完全不联网。
+
+### 自己部署
+
+```bash
+npm i -g wrangler && wrangler login
+wrangler kv namespace create TCM_KV   # 把返回的 id 填进 wrangler.toml
+node tools/upload_kv.mjs --dry-run    # 先看看会写什么
+node tools/upload_kv.mjs              # 真灌进 KV
+wrangler deploy
+```
+
+不想上云？`app/` 目录能打成 Android APK / Windows / Linux 桌面版，
+纯前端、纯离线，连 Worker 都不需要。
+
 规则和数据都在 `rules/*.json` 里，欢迎按你自己的教材版本改。**改完 PR 回来更好。**
 
 ## 免责

@@ -26,6 +26,13 @@
           window.TCM_FAMILY_UI.renderFamily(fr);
         }
       }
+      if (t.dataset.tab === 'settings' && window.TCM_SETTINGS) {
+        var sr = document.getElementById('settings-root');
+        if (sr && !sr.dataset.mounted) {
+          sr.dataset.mounted = '1';
+          window.TCM_SETTINGS.render(sr);
+        }
+      }
     });
   });
 
