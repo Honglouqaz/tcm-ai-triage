@@ -20,4 +20,26 @@ const must = ['index.html', 'app.js', 'style.css', 'sw.js', 'manifest.webmanifes
               'engine/tcm-engine.js', 'engine/rules-bundle.js'];
 const missing = must.filter(f => !fs.existsSync(path.join(web, f)));
 console.log(missing.length ? '❌ 缺失: ' + missing.join(', ') : '✅ web 资源齐备 (' + must.length + ' 项)');
+// ── 把 package.json 版本号注入 index.html footer ──
+// 必须在 process.exit 之前执行（此前放在末尾被 exit 挡掉，成死代码）。
+// 版本写死在 HTML 里，每次发版都会忘记改，导致包显示 v1.1 实际是 1.3.x。
+{
+  const pkg = JSON.parse(require('fs').readFileSync(require('path').join(__dirname, 'package.json'), 'utf8'));
+  const idxPath = require('path').join(__dirname, 'web', 'index.html');
+  if (require('fs').existsSync(idxPath)) {
+    let html = require('fs').readFileSync(idxPath, 'utf8');
+    // 幂等：无论当前是 __VERSION__ 占位符还是旧版本号 v1.2.3，都换成 package.json 的版本。
+    // 只判占位符的话，第一次替换后占位符就没了，后续构建不再更新版本号。
+    const before = html;
+    html = html.replace(/本地规则引擎 (__VERSION__|v\d+\.\d+(?:\.\d+)?)/,
+                        '本地规则引擎 v' + pkg.version);
+    if (html !== before) {
+      require('fs').writeFileSync(idxPath, html, 'utf8');
+      console.log('  ✅ footer 版本注入: v' + pkg.version);
+    } else {
+      console.log('  ⚠ footer 版本标记未找到，跳过注入');
+    }
+  }
+}
+
 process.exit(missing.length ? 1 : 0);
