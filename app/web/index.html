@@ -20,10 +20,11 @@
 
 <nav class="tabs" id="tabs">
   <button class="tab active" data-tab="diagnose">辨证</button>
+  <button class="tab" data-tab="triage">就医</button>
   <button class="tab" data-tab="constitution">体质</button>
   <button class="tab" data-tab="lab">化验</button>
   <button class="tab" data-tab="family">档案</button>
-    <button class="tab" data-tab="settings">模型</button>
+  <button class="tab" data-tab="settings">模型</button>
   <button class="tab" data-tab="about">说明</button>
 </nav>
 
@@ -72,6 +73,11 @@
     <div id="out-lab"></div>
   </section>
 
+  <!-- 就医等级 -->
+  <section class="panel" id="panel-triage">
+    <div id="triage-root"></div>
+  </section>
+
   <!-- 家庭档案 -->
   <section class="panel" id="panel-family">
     <div id="family-root"></div>
@@ -84,6 +90,26 @@
 
   <!-- 说明 -->
   <section class="panel" id="panel-about">
+    <div class="card" style="border-left:3px solid #523214;margin-bottom:12px">
+      <div style="font-size:13.5px;color:#2b2118;line-height:1.85;font-weight:600;margin-bottom:8px">
+        这不是医疗器械
+      </div>
+      <div style="font-size:12.5px;color:#6b6255;line-height:1.85">
+        体质辨识、证型匹配、化验解读、就医分级都是规则推理的参考，
+        不能替代执业医师的面诊。任何用药决定请由医生作出。<br>
+        出现胸痛、呼吸困难、意识改变、单侧肢体无力等表现，请立即拨打 120。
+      </div>
+    </div>
+    <div class="card" style="border-left:3px solid #a07a28;margin-bottom:12px">
+      <div style="font-size:13.5px;color:#2b2118;line-height:1.85;font-weight:600;margin-bottom:8px">
+        商业使用请联系作者
+      </div>
+      <div style="font-size:12.5px;color:#6b6255;line-height:1.85">
+        个人使用、教学、研究完全自由。要做成付费产品、SaaS 服务或企业内系统，
+        请先联系作者取得授权（GitHub Issues 标题加 [商业授权]）。<br>
+        源代码 MIT 可自由商用；规则与知识库数据为 CC BY-NC-SA 4.0，商业使用需授权。
+      </div>
+    </div>
     <div class="card">
       <h2>这个应用是什么</h2>
       <p>把中医的「四诊 → 辨证 → 调理」做成一套<strong>可跑、可读、可改</strong>的规则系统。推理全部在本地完成，<strong>不联网、不调用大模型</strong>，所以结果可复现、每一条结论都能追溯到具体条目与权重。</p>
@@ -110,6 +136,8 @@
 <script src="engine/tcm-engine.js"></script>
 <script src="engine/rules-bundle.js"></script>
 <script src="family.js"></script>
+<script src="triage.js"></script>
+<script src="triage-ui.js"></script>
 <script src="settings.js"></script>
 <script src="family-ui.js"></script>
 <script src="app.js"></script>

@@ -26,6 +26,13 @@
           window.TCM_FAMILY_UI.renderFamily(fr);
         }
       }
+      if (t.dataset.tab === 'triage' && window.TCM_TRIAGE_UI) {
+        var tr = document.getElementById('triage-root');
+        if (tr && !tr.dataset.mounted) {
+          tr.dataset.mounted = '1';
+          window.TCM_TRIAGE_UI.render(tr);
+        }
+      }
       if (t.dataset.tab === 'settings' && window.TCM_SETTINGS) {
         var sr = document.getElementById('settings-root');
         if (sr && !sr.dataset.mounted) {
