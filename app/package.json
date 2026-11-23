@@ -35,6 +35,7 @@
       "target": ["AppImage", "deb"],
       "category": "Utility",
       "icon": "build/icon.png",
+      "artifactName": "sishi-tcm-${version}-${arch}.${ext}",
       "synopsis": "离线中医辨证规则引擎",
       "description": "四时辨证：9 体质 / 47 证型 / 76 症状 / 73 首方剂 / 23 项化验指标，推理全在本地完成，不联网、不调用大模型。"
     },
@@ -42,7 +43,9 @@
       "target": [{ "target": "nsis", "arch": ["x64"] }, { "target": "portable", "arch": ["x64"] }],
       "icon": "build/icon.png"
     },
-    "nsis": { "oneClick": false, "allowToChangeInstallationDirectory": true, "shortcutName": "四时辨证" },
+    "nsis": { "oneClick": false, "allowToChangeInstallationDirectory": true, "shortcutName": "四时辨证",
+              "artifactName": "sishi-tcm-${version}-setup.${ext}" },
+    "portable": { "artifactName": "sishi-tcm-${version}-portable.${ext}" },
     "publish": null
   }
 }
