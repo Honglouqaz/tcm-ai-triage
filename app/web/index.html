@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>四时辨证 · 中医规则引擎</title>
-<meta name="description" content="离线中医辨证工具：9 体质 / 47 证型 / 76 症状 / 73 首方剂 / 23 项化验指标，规则全可读，不做黑箱。">
+<meta name="description" content="中医辨证与调理工具：9 体质 / 47 证型 / 76 症状 / 73 首方剂 / 23 项化验指标，规则全可读不做黑箱。默认纯本地推理，断网可用；可选接入自己的模型接口。">
 <meta name="theme-color" content="#1c1a17">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="stylesheet" href="style.css">
@@ -112,7 +112,7 @@
     </div>
     <div class="card">
       <h2>这个应用是什么</h2>
-      <p>把中医的「四诊 → 辨证 → 调理」做成一套<strong>可跑、可读、可改</strong>的规则系统。推理全部在本地完成，<strong>不联网、不调用大模型</strong>，所以结果可复现、每一条结论都能追溯到具体条目与权重。</p>
+      <p>把中医的「四诊 → 辨证 → 调理」做成一套<strong>可跑、可读、可改</strong>的规则系统。规则引擎在<strong>本机跑完，断网可用</strong>，所以结果可复现、每一条结论都能追溯到具体条目与权重。<strong>可选</strong>接入你自己的模型接口让它解释辨证过程——不配也完整可用。</p>
       <h2>权重口径（可被追问）</h2>
       <ul>
         <li>证型「典型症状」列表的前 40%（至少 2 条）记为主症，权重 <code>1.0</code>；其余为次症 <code>0.6</code></li>
@@ -130,7 +130,7 @@
 </main>
 
 <footer class="foot">
-  <span>四时辨证 · 本地规则引擎 v1.3.2 · 家庭档案 · 离线可用</span>
+  <span>四时辨证 · 本地规则引擎 v1.3.3 · 家庭档案 · 离线可用</span>
 </footer>
 
 <script src="engine/tcm-engine.js"></script>

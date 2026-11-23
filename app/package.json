@@ -1,8 +1,8 @@
 {
   "name": "sishi-tcm",
-  "version": "1.3.2",
+  "version": "1.3.3",
   "private": true,
-  "description": "四时辨证 — 离线中医辨证规则引擎（9 体质 / 47 证型 / 76 症状 / 73 首方剂 / 23 项化验）",
+  "description": "四时辨证 — 中医辨证与调理工具（9 体质 / 47 证型 / 76 症状 / 73 首方剂 / 23 项化验）",
   "author": "江南烟雨红楼 <honglouqaz@users.noreply.github.com>",
   "homepage": "https://github.com/Honglouqaz/tcm-ai-triage",
   "license": "MIT",
@@ -46,8 +46,8 @@
       "category": "Utility",
       "icon": "build/icon.png",
       "artifactName": "sishi-tcm-${version}-${arch}.${ext}",
-      "synopsis": "离线中医辨证规则引擎",
-      "description": "四时辨证：9 体质 / 47 证型 / 76 症状 / 73 首方剂 / 23 项化验指标，推理全在本地完成，不联网、不调用大模型。"
+      "synopsis": "中医辨证与调理工具",
+      "description": "四时辨证：9 体质 / 47 证型 / 76 症状 / 73 首方剂 / 23 项化验指标。默认纯本地规则推理，断网可用；可选接入自己的模型接口。"
     },
     "win": {
       "target": [
