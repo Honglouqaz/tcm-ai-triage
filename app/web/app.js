@@ -18,6 +18,14 @@
       t.classList.add('active');
       document.getElementById('panel-' + t.dataset.tab).classList.add('active');
       window.scrollTo({ top: 0, behavior: 'smooth' });
+      // 家庭档案按需渲染（首次进入才建库读库，避免拖慢启动）
+      if (t.dataset.tab === 'family' && window.TCM_FAMILY_UI) {
+        var fr = document.getElementById('family-root');
+        if (fr && !fr.dataset.mounted) {
+          fr.dataset.mounted = '1';
+          window.TCM_FAMILY_UI.renderFamily(fr);
+        }
+      }
     });
   });
 

@@ -1,6 +1,6 @@
 {
   "name": "sishi-tcm",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "private": true,
   "description": "四时辨证 — 离线中医辨证规则引擎（9 体质 / 47 证型 / 76 症状 / 73 首方剂 / 23 项化验）",
   "author": "江南烟雨红楼 <honglouqaz@users.noreply.github.com>",
@@ -29,10 +29,20 @@
     "appId": "uk.yanyusk.sishi",
     "productName": "四时辨证",
     "copyright": "MIT · 江南烟雨红楼",
-    "directories": { "output": "dist", "buildResources": "build" },
-    "files": ["electron/**/*", "web/**/*", "package.json"],
+    "directories": {
+      "output": "dist",
+      "buildResources": "build"
+    },
+    "files": [
+      "electron/**/*",
+      "web/**/*",
+      "package.json"
+    ],
     "linux": {
-      "target": ["AppImage", "deb"],
+      "target": [
+        "AppImage",
+        "deb"
+      ],
       "category": "Utility",
       "icon": "build/icon.png",
       "artifactName": "sishi-tcm-${version}-${arch}.${ext}",
@@ -40,12 +50,31 @@
       "description": "四时辨证：9 体质 / 47 证型 / 76 症状 / 73 首方剂 / 23 项化验指标，推理全在本地完成，不联网、不调用大模型。"
     },
     "win": {
-      "target": [{ "target": "nsis", "arch": ["x64"] }, { "target": "portable", "arch": ["x64"] }],
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
       "icon": "build/icon.png"
     },
-    "nsis": { "oneClick": false, "allowToChangeInstallationDirectory": true, "shortcutName": "四时辨证",
-              "artifactName": "sishi-tcm-${version}-setup.${ext}" },
-    "portable": { "artifactName": "sishi-tcm-${version}-portable.${ext}" },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "shortcutName": "四时辨证",
+      "artifactName": "sishi-tcm-${version}-setup.${ext}"
+    },
+    "portable": {
+      "artifactName": "sishi-tcm-${version}-portable.${ext}"
+    },
     "publish": null
   }
 }
